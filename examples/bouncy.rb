@@ -5,7 +5,7 @@ require 'nimo'
 WINDOW_WIDTH = 512
 WINDOW_HEIGHT = 480
 
-PAD_CONFIG = { :x => 200, :y => 400, :width => 80, :height => 15}
+PAD_CONFIG = { :x => 200, :y => 400, :width => 80, :height => 40}
 BALL_CONFIG = { :x => 200, :y => 200, :width => 10, :height => 10}
 
 class GameScreen < Nimo::Screen
@@ -21,6 +21,8 @@ class GameScreen < Nimo::Screen
     pad = Nimo::QuadRepresentation.new(@game_window, pad_obj, Gosu::white)
     pad.when_key(Gosu::Button::KbLeft) { move_left }
     pad.when_key(Gosu::Button::KbRight) { move_right }
+    pad.when_key(Gosu::Button::KbUp) { move_up }
+    pad.when_key(Gosu::Button::KbDown) { move_down }
     representations << pad
     
     ball = Nimo::QuadRepresentation.new(@game_window, Ball.new(BALL_CONFIG, pad_obj, Wall.sections), Gosu::red)
@@ -42,11 +44,10 @@ class Deflector < Nimo::GameObject
   
   def initialize(config_options={:x => 0, :y => 0, :width => 0, :height => 0})
     super(config_options)
-    @deflect_action = nil
     @collision_timeout = 0
   end
   
-  def deflect_and_adjust(ball)
+  def deflect(ball)
     @collision_timeout -= 1 if @collision_timeout > 0
     return unless @collision_timeout.zero? && collide?(ball)
 
@@ -61,21 +62,9 @@ class Deflector < Nimo::GameObject
         ball.velocity.x = ball.velocity.x.abs
     end
     
-    ball.velocity.adjust(deflection_modifier(ball))
-    @deflect_action.call() if @deflect_action
     @collision_timeout = 5
   end
-  
-  def when_deflect(&action)
-    @deflect_action = action
-  end
-  
-  protected
-  
-  def deflection_modifier(ball)
-    0
-  end
-  
+    
 end
 
 
@@ -87,41 +76,40 @@ class Pad < Deflector
   
   def move_left
     @x -= 5
-    @x = 0 if @x < 0 # FIXME move this logic elsewhere?
+    @x = 0 if @x < 0
   end
   
   def move_right
     @x += 5
-    @x = WINDOW_WIDTH - @width if (@x + @width) > WINDOW_WIDTH # FIXME move this logic elsewhere?
+    @x = WINDOW_WIDTH - @width if (@x + @width) > WINDOW_WIDTH
   end
   
-  def deflection_modifier(ball)
-    (ball.x_center - self.x_center)/(1.5*@width)
+  def move_up
+    @y -= 5
+    @y = 0 if @y < 0
+  end
+  
+  def move_down
+    @y += 5
+    @y = WINDOW_HEIGHT - @height if (@y + @height) > WINDOW_HEIGHT
   end
   
 end
 
 
 class Wall
-  
   def self.sections
     [
       Deflector.new({:x => -10, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10}),
       Deflector.new({:x => -10, :y => -10, :width => WINDOW_WIDTH + 10, :height => 10}),
-      Deflector.new({:x => WINDOW_WIDTH, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10})
+      Deflector.new({:x => WINDOW_WIDTH, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10}),
+      Deflector.new({:x => -10, :y => WINDOW_HEIGHT, :width => WINDOW_WIDTH, :height => 10})
     ]
   end
-    
 end
 
 
 Velocity = Struct.new(:x, :y) do
-  def adjust(radian)
-    xl = Math::cos(radian)*self.x - Math::sin(radian)*self.y
-    yl = Math::sin(radian)*self.x + Math::cos(radian)*self.y
-    self.x = xl
-    self.y = yl
-  end
 end
 
 class Ball < Nimo::GameObject
@@ -133,12 +121,11 @@ class Ball < Nimo::GameObject
     @deflectors = deflectors.flatten
     
     @speed = 5
-    @velocity = Velocity.new(0.0, 1.0)
-    @velocity.adjust(-0.2)
+    @velocity = Velocity.new(0.2, 0.7)
   end
     
   def move
-    @deflectors.each { |deflector| deflector.deflect_and_adjust(self) }
+    @deflectors.each { |deflector| deflector.deflect(self) }
     @x += @speed * @velocity.x
     @y += @speed * @velocity.y
   end

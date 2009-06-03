@@ -1,0 +1,19 @@
+# Libraries
+begin
+  # In case you use Gosu via RubyGems.
+  require "rubygems"
+rescue LoadError
+  # In case you don't.
+end
+
+require "gosu"
+
+NIMO_DIR = File.expand_path(File.dirname(__FILE__) + "/nimo")
+
+require NIMO_DIR + "/game_window"
+require NIMO_DIR + "/screen"
+require NIMO_DIR + "/intersection"
+require NIMO_DIR + "/game_object"
+require NIMO_DIR + "/object_representation"
+require NIMO_DIR + "/representations/quad_representation"
+require NIMO_DIR + "/representations/image_representation"

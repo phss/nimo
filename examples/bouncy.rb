@@ -55,6 +55,11 @@ class Deflector < Nimo::GameObject
 end
 
 
+# class Pad < Nimo::GameObject
+#   can :deflect, :move_left, :move_right, :move_up, :move_down
+#   boundary :board
+# end
+
 class Pad < Deflector
   
   def move_left
@@ -89,6 +94,10 @@ class Wall
   end
 end
 
+
+# class Ball < Nimo::GameObject
+#   is_a :projectile
+# end
 
 class Ball < Nimo::GameObject
   

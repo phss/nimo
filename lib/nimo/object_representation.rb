@@ -13,11 +13,13 @@ module Nimo
 
     def always(&action)
       @always_actions << action
+      self
     end
 
     def when_key(key, &action)
       key = @game_window.char_to_button_id(key) if key.class == String
       @key_actions[key] = action
+      self
     end
 
     def update

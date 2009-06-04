@@ -1,9 +1,13 @@
 module Nimo
   
+  #
+  # Base game domain object containing position and dimension data. Any object that represents
+  # a game entity should extend this class.
+  #
   class GameObject
     attr_accessor :x, :y, :width, :height
       
-    def initialize(config_options={:x => 0, :y => 0, :width => 0, :height => 0})
+    def initialize(config_options = {:x => 0, :y => 0, :width => 0, :height => 0})
       configure_with(config_options)
     end
   
@@ -29,17 +33,12 @@ module Nimo
     end
     
     def intersection(obj)
-      return collide?(obj) ? Intersection.between(self, obj) : nil
+      collide?(obj) ? Intersection.between(self, obj) : nil
     end
 
-    def x_center
-      @x + (@width/2)
+    def center
+      Object.from_hash(:x => @x + (@width/2), :y => @y + (@height/2))
     end
-
-    def y_center
-      @y + (@height/2)
-    end
-  
   end
   
 end

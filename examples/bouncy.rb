@@ -9,7 +9,7 @@ WINDOW_HEIGHT = 480
 class GameScreen < Nimo::Screen
   
   def initialize_representations
-    pad_obj = Pad.new({ :x => 200, :y => 400, :width => 80, :height => 40})
+    pad_obj = Pad.new(:x => 200, :y => 400, :width => 80, :height => 40)
     
     [ Nimo::QuadRepresentation.new(@game_window, pad_obj, Gosu::white).
         when_key(Gosu::Button::KbLeft) { move_left }.

@@ -20,9 +20,9 @@ module Nimo
     
     def collistion_side_for(obj)
       if @width >= @height
-        return obj.y_center > (@y + (@height/2)) ? :top : :bottom
+        return obj.center.y > (@y + (@height/2)) ? :top : :bottom
       else
-        return obj.x_center > (@x + (@width/2)) ? :left : :right
+        return obj.center.x > (@x + (@width/2)) ? :left : :right
       end
     end
     

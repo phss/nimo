@@ -2,23 +2,23 @@ module Nimo::Behavior
   
   module Deflector
     
-    def deflect(ball)
+    def deflect(projectile)
       @collision_timeout ||= 0
       @collision_timeout -= 1 if @collision_timeout > 0
-      return unless @collision_timeout.zero? && collide?(ball)
+      return unless @collision_timeout.zero? && collide?(projectile)
 
-      case intersection(ball).collistion_side_for(self)
+      case intersection(projectile).collistion_side_for(self)
         when :top
-          ball.velocity.y = -ball.velocity.y.abs
+          projectile.velocity.y = -projectile.velocity.y.abs
         when :bottom
-          ball.velocity.y = ball.velocity.y.abs
+          projectile.velocity.y = projectile.velocity.y.abs
         when :left
-          ball.velocity.x = -ball.velocity.x.abs
+          projectile.velocity.x = -projectile.velocity.x.abs
         when :right
-          ball.velocity.x = ball.velocity.x.abs
+          projectile.velocity.x = projectile.velocity.x.abs
       end
 
-      ball.velocity.adjust(deflection_modifier(ball)) if deflection_modifier(ball) != 0
+      projectile.velocity.adjust(deflection_modifier(projectile)) if deflection_modifier(projectile) != 0
       @deflect_action.call() if @deflect_action
       @collision_timeout = 5
     end
@@ -29,7 +29,7 @@ module Nimo::Behavior
 
     protected
 
-    def deflection_modifier(ball)
+    def deflection_modifier(projectile)
       0
     end
     

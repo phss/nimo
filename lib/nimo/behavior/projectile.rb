@@ -4,7 +4,7 @@ module Nimo::Behavior
     attr_reader :velocity
     
     def initialize(*params)
-      @speed = 5
+      @speed = 0
       @velocity = Struct.new(:x, :y).new(0.0, 0.0)
       @deflectors = []
       super(*params)
@@ -16,8 +16,9 @@ module Nimo::Behavior
       @y += @speed * @velocity.y
     end
     
-    def add_deflectors(*new_deflectors)
-      @deflector += new_deflectors
+    def with_deflectors(*new_deflectors)
+      @deflectors += new_deflectors
+      @deflectors.flatten!
     end
 
   end

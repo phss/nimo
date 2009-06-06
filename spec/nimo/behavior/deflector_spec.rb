@@ -15,8 +15,7 @@ end
 describe Nimo::Behavior::Deflector do
   
   def new_ball_at(x, y)
-    # FIXME use the line below after the projectile refactoring Object.from_hash(:x => 0.2, :y => 0.7)
-    return StubProjectile.new(:x => x, :y => y, :width => 5, :height => 5, :velocity => Struct.new(:x, :y).new(0.2, 0.7))
+    return StubProjectile.new(:x => x, :y => y, :width => 5, :height => 5, :velocity => Object.from_hash(:x => 0.2, :y => 0.7))
   end
   
   it "should not deflect when deflector does not collide with ball" do

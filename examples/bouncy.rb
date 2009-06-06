@@ -11,13 +11,13 @@ class GameScreen < Nimo::Screen
   def initialize_representations
     pad_obj = Pad.new
     
-    [ Nimo::QuadRepresentation.new(@game_window, pad_obj, Gosu::white).
+    [ Nimo::QuadRepresentation.new(@game_window, Ball.new(pad_obj, Wall.sections), Gosu::red).
+        always { move },
+      Nimo::QuadRepresentation.new(@game_window, pad_obj, Gosu::white).
         when_key(Gosu::Button::KbLeft) { move_left }.
         when_key(Gosu::Button::KbRight) { move_right }.
         when_key(Gosu::Button::KbUp) { move_up }.
-        when_key(Gosu::Button::KbDown) { move_down },
-      Nimo::QuadRepresentation.new(@game_window, Ball.new(pad_obj, Wall.sections), Gosu::red).
-        always { move } ]
+        when_key(Gosu::Button::KbDown) { move_down } ]
   end
   
   def button_down(id)
@@ -73,8 +73,8 @@ class Ball < Nimo::GameObject
   include Nimo::Behavior::Projectile
   
   def initialize(*deflectors)
-    super(:x => 200, :y => 200, :width => 10, :height => 10, :velocity => Struct.new(:x, :y).new(0.2, 0.7))
-    @deflectors = deflectors.flatten
+    super(:x => 200, :y => 200, :width => 10, :height => 10, :velocity => Object.from_hash(:x => 0.2, :y => 0.7), :speed => 10)
+    with_deflectors(deflectors)
   end
 end
 

@@ -4,7 +4,7 @@ class StubProjectile < Nimo::GameObject
   include Nimo::Behavior::Projectile
 end
 
-class StubDeflector
+class FlipDeflector
   def deflect(projectile)
     projectile.velocity.x = -projectile.velocity.x
   end
@@ -23,7 +23,7 @@ describe Nimo::Behavior::Projectile do
   
   it "should be deflected" do
     projectile = StubProjectile.new(:speed => 10, :velocity => Object.from_hash(:x => 0.2, :y => 0.5))
-    projectile.with_deflectors(StubDeflector.new)
+    projectile.with_deflectors(FlipDeflector.new)
     
     projectile.move
     

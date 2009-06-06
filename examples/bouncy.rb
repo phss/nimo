@@ -29,29 +29,11 @@ end
 
 class Pad < Nimo::GameObject
   include Nimo::Behavior::Deflector
+  include Nimo::Behavior::Moveable
   
   def initialize
-    super(:x => 200, :y => 400, :width => 80, :height => 40)
-  end
-  
-  def move_left
-    @x -= 5
-    @x = 0 if @x < 0
-  end
-  
-  def move_right
-    @x += 5
-    @x = WINDOW_WIDTH - @width if (@x + @width) > WINDOW_WIDTH
-  end
-  
-  def move_up
-    @y -= 5
-    @y = 0 if @y < 0
-  end
-  
-  def move_down
-    @y += 5
-    @y = WINDOW_HEIGHT - @height if (@y + @height) > WINDOW_HEIGHT
+    super(:x => 200, :y => 400, :width => 80, :height => 40, :speed => 5,
+          :boundary => Object.from_hash(:x => 0, :y => 0, :width => WINDOW_WIDTH, :height => WINDOW_HEIGHT))
   end
   
 end
@@ -61,10 +43,10 @@ class Wall < Nimo::GameObject
   include Nimo::Behavior::Deflector
   
   def self.sections
-    [ Wall.new({:x => -10, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10}),
-      Wall.new({:x => -10, :y => -10, :width => WINDOW_WIDTH + 10, :height => 10}),
-      Wall.new({:x => WINDOW_WIDTH, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10}),
-      Wall.new({:x => -10, :y => WINDOW_HEIGHT, :width => WINDOW_WIDTH, :height => 10}) ]
+    [ Wall.new(:x => -10, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10),
+      Wall.new(:x => -10, :y => -10, :width => WINDOW_WIDTH + 10, :height => 10),
+      Wall.new(:x => WINDOW_WIDTH, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10),
+      Wall.new(:x => -10, :y => WINDOW_HEIGHT, :width => WINDOW_WIDTH, :height => 10) ]
   end
 end
 

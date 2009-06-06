@@ -20,6 +20,7 @@ require NIMO_DIR + "/intersection"
 
 require NIMO_DIR + "/behavior/deflector"
 require NIMO_DIR + "/behavior/projectile"
+require NIMO_DIR + "/behavior/moveable"
 
 require NIMO_DIR + "/object_representation"
 require NIMO_DIR + "/representations/quad_representation"

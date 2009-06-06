@@ -10,7 +10,7 @@ module Nimo::Behavior
     
     def move_left
       @x -= @speed
-      @x = 0 if @boundary && @x < @boundary.x
+      @x = @boundary.x if @boundary && @x < @boundary.x
     end
 
     def move_right
@@ -20,7 +20,7 @@ module Nimo::Behavior
 
     def move_up
       @y -= @speed
-      @y = 0 if @boundary && @y < @boundary.y
+      @y = @boundary.y if @boundary && @y < @boundary.y
     end
 
     def move_down

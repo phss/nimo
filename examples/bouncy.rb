@@ -9,14 +9,14 @@ WINDOW_HEIGHT = 480
 class GameScreen < Nimo::Screen
   
   def initialize_representations
-    pad_obj = Pad.new(:x => 200, :y => 400, :width => 80, :height => 40)
+    pad_obj = Pad.new
     
     [ Nimo::QuadRepresentation.new(@game_window, pad_obj, Gosu::white).
         when_key(Gosu::Button::KbLeft) { move_left }.
         when_key(Gosu::Button::KbRight) { move_right }.
         when_key(Gosu::Button::KbUp) { move_up }.
         when_key(Gosu::Button::KbDown) { move_down },
-      Nimo::QuadRepresentation.new(@game_window, Ball.new({ :x => 200, :y => 200, :width => 10, :height => 10}, pad_obj, Wall.sections), Gosu::red).
+      Nimo::QuadRepresentation.new(@game_window, Ball.new(pad_obj, Wall.sections), Gosu::red).
         always { move } ]
   end
   
@@ -27,40 +27,12 @@ class GameScreen < Nimo::Screen
 end
 
 
-class Deflector < Nimo::GameObject
+class Pad < Nimo::GameObject
+  include Nimo::Behavior::Deflector
   
-  def initialize(config_options)
-    super(config_options)
-    @collision_timeout = 0
+  def initialize
+    super(:x => 200, :y => 400, :width => 80, :height => 40)
   end
-  
-  def deflect(ball)
-    @collision_timeout -= 1 if @collision_timeout > 0
-    return unless @collision_timeout.zero? && collide?(ball)
-
-    case intersection(ball).collistion_side_for(self)
-      when :top
-        ball.velocity.y = -ball.velocity.y.abs
-      when :bottom
-        ball.velocity.y = ball.velocity.y.abs
-      when :left
-        ball.velocity.x = -ball.velocity.x.abs
-      when :right
-        ball.velocity.x = ball.velocity.x.abs
-    end
-    
-    @collision_timeout = 5
-  end
-    
-end
-
-
-# class Pad < Nimo::GameObject
-#   can :deflect, :move_left, :move_right, :move_up, :move_down
-#   boundary :board
-# end
-
-class Pad < Deflector
   
   def move_left
     @x -= 5
@@ -85,38 +57,25 @@ class Pad < Deflector
 end
 
 
-class Wall
+class Wall < Nimo::GameObject
+  include Nimo::Behavior::Deflector
+  
   def self.sections
-    [ Deflector.new({:x => -10, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10}),
-      Deflector.new({:x => -10, :y => -10, :width => WINDOW_WIDTH + 10, :height => 10}),
-      Deflector.new({:x => WINDOW_WIDTH, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10}),
-      Deflector.new({:x => -10, :y => WINDOW_HEIGHT, :width => WINDOW_WIDTH, :height => 10}) ]
+    [ Wall.new({:x => -10, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10}),
+      Wall.new({:x => -10, :y => -10, :width => WINDOW_WIDTH + 10, :height => 10}),
+      Wall.new({:x => WINDOW_WIDTH, :y => -10, :width => 10, :height => WINDOW_HEIGHT + 10}),
+      Wall.new({:x => -10, :y => WINDOW_HEIGHT, :width => WINDOW_WIDTH, :height => 10}) ]
   end
 end
 
 
-# class Ball < Nimo::GameObject
-#   is_a :projectile
-# end
-
 class Ball < Nimo::GameObject
+  include Nimo::Behavior::Projectile
   
-  attr_reader :velocity
-  
-  def initialize(config, *deflectors)
-    configure_with(config)
+  def initialize(*deflectors)
+    super(:x => 200, :y => 200, :width => 10, :height => 10, :velocity => Struct.new(:x, :y).new(0.2, 0.7))
     @deflectors = deflectors.flatten
-    
-    @speed = 5
-    @velocity = Struct.new(:x, :y).new(0.2, 0.7)
   end
-    
-  def move
-    @deflectors.each { |deflector| deflector.deflect(self) }
-    @x += @speed * @velocity.x
-    @y += @speed * @velocity.y
-  end
-  
 end
 
 

@@ -24,7 +24,7 @@ module Nimo
     # config_options is a hash that can take the following keys: :x, :y, :width, :height. 
     # The key restriction is not being enforced.
     def configure_with(config_options)
-      config_options.each { |attribute, value| eval "self.#{attribute} = #{value}" }
+      config_options.each { |attribute, value| instance_variable_set("@#{attribute}", value) }
     end
   
     def collide?(obj)

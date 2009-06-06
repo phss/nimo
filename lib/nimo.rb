@@ -11,12 +11,11 @@ require "gosu"
 NIMO_DIR = File.expand_path(File.dirname(__FILE__) + "/nimo")
 
 require NIMO_DIR + "/utils/object_extension"
-
-require NIMO_DIR + "/game_window"
-require NIMO_DIR + "/screen"
+require NIMO_DIR + "/utils/intersection"
 
 require NIMO_DIR + "/game_object"
-require NIMO_DIR + "/intersection"
+require NIMO_DIR + "/game_window"
+require NIMO_DIR + "/screen"
 
 require NIMO_DIR + "/behavior/deflector"
 require NIMO_DIR + "/behavior/projectile"

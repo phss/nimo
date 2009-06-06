@@ -6,12 +6,17 @@ module Nimo
   class ObjectRepresentation
     
     attr_reader :game_object
+    attr_accessor :game_window
 
-    def initialize(game_window, game_object)
+    def initialize(game_window, game_object, params = {})
       @game_window = game_window
       @game_object = game_object
       @always_actions = []
       @key_actions = {}
+    end
+    
+    def self.for(game_object, params = {})
+      self.new(nil, game_object, params)
     end
 
     def always(&action)

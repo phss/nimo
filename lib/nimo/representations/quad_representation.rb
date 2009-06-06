@@ -2,9 +2,9 @@ module Nimo
   
   class QuadRepresentation < ObjectRepresentation
   
-    def initialize(game_window, game_object, quad_color)
+    def initialize(game_window, game_object, params)
       super(game_window, game_object)
-      @quad_color = quad_color
+      @quad_color = params[:color]
     end
   
     def draw

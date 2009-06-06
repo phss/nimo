@@ -7,8 +7,8 @@ module Nimo
   class GameObject
     attr_accessor :x, :y, :width, :height
       
-    def initialize(config_options = {:x => 0, :y => 0, :width => 0, :height => 0})
-      configure_with(config_options)
+    def initialize(config_options = {})
+      configure_with({:x => 0, :y => 0, :width => 0, :height => 0}.merge(config_options))
     end
   
     def at(x, y)

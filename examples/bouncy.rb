@@ -9,11 +9,11 @@ WINDOW_HEIGHT = 480
 class GameScreen < Nimo::Screen
   
   def initialize_representations
-    pad_obj = Pad.new
+    pad = Pad.new
     
-    [ Nimo::QuadRepresentation.new(@game_window, Ball.new(pad_obj, Wall.sections), Gosu::red).
+    [ Nimo::QuadRepresentation.new(@game_window, Ball.new(pad, Wall.sections), Gosu::red).
         always { move },
-      Nimo::QuadRepresentation.new(@game_window, pad_obj, Gosu::white).
+      Nimo::QuadRepresentation.new(@game_window, pad, Gosu::white).
         when_key(Gosu::Button::KbLeft) { move_left }.
         when_key(Gosu::Button::KbRight) { move_right }.
         when_key(Gosu::Button::KbUp) { move_up }.
@@ -36,6 +36,10 @@ class Pad < Nimo::GameObject
           :boundary => Object.from_hash(:x => 0, :y => 0, :width => WINDOW_WIDTH, :height => WINDOW_HEIGHT))
   end
   
+  def deflection_modifier(ball)
+    (ball.center.x - self.center.x)/(1.5*@width)
+  end
+  
 end
 
 
@@ -55,7 +59,7 @@ class Ball < Nimo::GameObject
   include Nimo::Behavior::Projectile
   
   def initialize(*deflectors)
-    super(:x => 200, :y => 200, :width => 10, :height => 10, :velocity => Object.from_hash(:x => 0.2, :y => 0.7), :speed => 10)
+    super(:x => 200, :y => 200, :width => 10, :height => 10, :velocity => Nimo::Behavior::Velocity.new(0.2, 0.7), :speed => 10)
     with_deflectors(deflectors)
   end
 end

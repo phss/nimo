@@ -8,6 +8,22 @@ WINDOW_HEIGHT = 480
 
 class GameScreen < Nimo::Screen
   
+  def objects
+    pad = Pad.new
+    add(:pad, Pad.new)
+    add(:ball, Ball.new(pad, Wall.sections))
+  end
+  
+  def representations
+    quad_for :ball, :color => Gosu::red { always { move } }
+    quad_for :pad, :color => Gosu::white do
+      when_key(Gosu::Button::KbLeft) { move_left }.
+      when_key(Gosu::Button::KbRight) { move_right }.
+      when_key(Gosu::Button::KbUp) { move_up }.
+      when_key(Gosu::Button::KbDown) { move_down }
+    end
+  end
+  
   def initialize_representations
     pad = Pad.new
     

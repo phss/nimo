@@ -1,5 +1,8 @@
 module Nimo
   
+  # 
+  # Nimo::GameObject's view. It holds actions to be executed on every update or when a key is pressed.
+  # 
   class ObjectRepresentation
     
     attr_reader :game_object

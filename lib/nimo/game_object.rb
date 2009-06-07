@@ -9,6 +9,7 @@ module Nimo
       
     def initialize(config_options = {})
       configure_with({:x => 0, :y => 0, :width => 0, :height => 0}.merge(config_options))
+      @listeners = {}
     end
   
     def at(x, y)
@@ -39,6 +40,16 @@ module Nimo
     def center
       Object.from_hash(:x => @x + (@width/2), :y => @y + (@height/2))
     end
+    
+    def register_listener(event_type, listener)
+      @listeners[event_type] ||= []
+      @listeners[event_type] << listener
+    end
+    
+    def notify(event_type)
+      @listeners[event_type].each { |listener| listener.notify(event_type) } if @listeners.has_key? event_type
+    end
+    
   end
   
 end

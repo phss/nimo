@@ -19,12 +19,13 @@ module Nimo::Behavior
       end
 
       projectile.velocity.adjust(deflection_modifier(projectile))
-      @deflect_action.call() if @deflect_action
+      @deflect_action.call(projectile) if @deflect_action
       @collision_timeout = 5
     end
 
     def when_deflect(&action)
       @deflect_action = action
+      self
     end
 
     protected

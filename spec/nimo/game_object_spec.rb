@@ -131,5 +131,40 @@ describe Nimo::GameObject do
     end 
     
   end
+  
+  describe "(event notification)" do
+    
+    it "should notify event to registered listener" do
+      mock_listener = mock("listener")
+      mock_listener.should_receive(:notify).with(:some_event)
+      
+      obj = Nimo::GameObject.new
+      obj.register_listener(:some_event, mock_listener)
+      obj.notify(:some_event)
+    end
+    
+    it "should notify multiple listeners" do
+      mock_listener1 = mock("listener")
+      mock_listener2 = mock("listener")
+      mock_listener1.should_receive(:notify).with(:some_event)
+      mock_listener2.should_receive(:notify).with(:some_event)
+      
+      obj = Nimo::GameObject.new
+      obj.register_listener(:some_event, mock_listener1)
+      obj.register_listener(:some_event, mock_listener2)
+      obj.notify(:some_event)
+    end
+    
+    it "should not notify event of different type" do
+      mock_listener = mock("listener")
+      mock_listener.should_not_receive(:notify).with(:another_event)
+      mock_listener.should_not_receive(:notify).with(:some_event)
+      
+      obj = Nimo::GameObject.new
+      obj.register_listener(:some_event, mock_listener)
+      obj.notify(:another_event)
+    end
+    
+  end
     
 end

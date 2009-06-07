@@ -55,4 +55,11 @@ describe Nimo::Screen do
     screen.draw
   end
   
+  it "should change screen" do
+    mock_window = mock("window")
+    mock_window.should_receive(:go_to).with("Screen")
+    
+    TestScreen.new(mock_window).go_to("Screen")
+  end
+  
 end

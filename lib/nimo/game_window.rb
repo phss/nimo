@@ -21,8 +21,8 @@ module Nimo
     end
     
     def go_to(screen_name)
-      raise "There is no screen named #{screen_name}" unless @screens.has_key? screen_name
-      @current_screen = @screens[screen_name]
+      raise "There is no screen named #{screen_name}" unless @screens.has_key? screen_name.to_s
+      @current_screen = @screens[screen_name.to_s]
     end
   
     def update

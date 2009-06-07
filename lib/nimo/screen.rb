@@ -28,6 +28,10 @@ module Nimo
     def remove_representation_for(object)
       @obj_representations.delete_if { |representation| representation.game_object == object }
     end
+    
+    def go_to(screen)
+      @game_window.go_to(screen)
+    end
   
     def button_down(id)
       # Do nothing

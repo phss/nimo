@@ -12,14 +12,22 @@ WINDOW_HEIGHT = 480
 
 
 class StartScreen < Nimo::Screen
+  def representations
+    add(Nimo::TextRepresentation.for(:x => 10, :y => 200, :color => Gosu::white,
+      :text => "StartScreen: press any key to go to the GameScreen"))
+  end
+  
   def button_down(id)
-    go_to(:Game) if id == Gosu::Button::KbEscape
+    go_to(:Game)
   end
 end
 
 
 class GameScreen < Nimo::Screen
   def representations
+    add(Nimo::TextRepresentation.for(:x => 10, :y => 10, :color => Gosu::white,
+      :text => "GameScreen: press any key to open the MenuScreen"))
+    
     balls = (0..19).collect { Ball.new(Wall.sections) }
     balls.each do |ball|
       ball.with_deflectors(balls.find_all { |other_ball| other_ball != ball })
@@ -28,21 +36,36 @@ class GameScreen < Nimo::Screen
   end
   
   def button_down(id)
-     go_to(:Menu) if id == Gosu::Button::KbEscape
+     open_menu(:Menu)
   end
 end
 
 
 class MenuScreen < Nimo::Screen
+  def representations
+    add(Nimo::TextRepresentation.for(:x => 100, :y => 200, :color => Gosu::white, :size => 15,
+      :text => "MenuScreen:"))
+    add(Nimo::TextRepresentation.for(:x => 100, :y => 215, :color => Gosu::white, :size => 15,
+      :text => "- <ESC> to go to the EndScreen"))
+    add(Nimo::TextRepresentation.for(:x => 100, :y => 230, :color => Gosu::white, :size => 15,
+      :text => "- <ENTER> to go to the GameScreen"))
+  end
+  
   def button_down(id)
-    go_to(:End) if id == Gosu::Button::KbEscape
+    close_menu if id == Gosu::Button::KbReturn
+    close_menu and go_to(:End) if id == Gosu::Button::KbEscape
   end
 end
 
 
 class EndScreen < Nimo::Screen
+  def representations
+    add(Nimo::TextRepresentation.for(:x => 10, :y => 200, :color => Gosu::white,
+      :text => "EndScreen: you've reached the end of this example!"))
+  end
+  
   def button_down(id)
-    exit if id == Gosu::Button::KbEscape
+    exit
   end
 end
 

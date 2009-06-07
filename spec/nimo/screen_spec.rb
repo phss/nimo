@@ -43,8 +43,9 @@ describe Nimo::Screen do
   
   it "should forward updates and draws to representations" do
     mock_representation = mock("representation")
-    
     mock_representation.should_receive(:game_window=).with("game window")
+    mock_representation.should_receive(:load)
+    
     screen = TestScreen.new("game window")
     screen.add(mock_representation)
     

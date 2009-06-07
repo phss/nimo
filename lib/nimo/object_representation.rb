@@ -19,6 +19,10 @@ module Nimo
     def self.for(game_object, params = {})
       self.new(nil, game_object, params)
     end
+    
+    # Hook to load data (i.e. images and fonts) from the game window. TODO not a great solution
+    def load
+    end
 
     # Always execute the action on a game update
     def always(&action)

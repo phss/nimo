@@ -4,7 +4,11 @@ module Nimo
   
     def initialize(game_window, game_object, params)
       super(game_window, game_object)
-      @image = Gosu::Image.new(@game_window, params[:file], 0)
+      @file = params[:file]
+    end
+    
+    def load
+      @image = Gosu::Image.new(@game_window, @file, 0)
     end
   
     def draw

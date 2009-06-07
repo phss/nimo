@@ -22,19 +22,21 @@ module Nimo
     
     def add(representation)
       representation.game_window = @game_window
+      representation.load
       @obj_representations << representation
     end
     
     def remove_representation_for(object)
       @obj_representations.delete_if { |representation| representation.game_object == object }
     end
-    
-    def go_to(screen)
-      @game_window.go_to(screen)
-    end
   
     def button_down(id)
       # Do nothing
+    end
+    
+    # Proxy methods to Nimo::GameWindow.
+    def method_missing(meth, *args, &blk)
+      @game_window.send(meth, *args, &blk)
     end
   
   end

@@ -9,6 +9,7 @@ module Nimo
       self.caption = name
       
       @screens = {}
+      @background_screens = []
     end
     
     def add_screen(name, screen)
@@ -24,12 +25,22 @@ module Nimo
       raise "There is no screen named #{screen_name}" unless @screens.has_key? screen_name.to_s
       @current_screen = @screens[screen_name.to_s]
     end
+    
+    def open_menu(screen_name)
+      @background_screens << @current_screen
+      go_to(screen_name)
+    end
+    
+    def close_menu
+      @current_screen = @background_screens.pop
+    end
   
     def update
       @current_screen.update
     end
 
     def draw
+      @background_screens.each { |screen| screen.draw }
       @current_screen.draw
     end
   

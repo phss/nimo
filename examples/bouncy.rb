@@ -1,3 +1,9 @@
+# 
+# bouncy.rb
+# 
+# Example using deflectors, projectiles and moveable behaviors. It demonstrates how to create interacting
+# objects and representations
+# 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'nimo'
@@ -10,11 +16,16 @@ class GameScreen < Nimo::Screen
   
   def representations
     pad = Pad.new
-    ball = Ball.new(pad, Wall.sections)
+    balls = (0..19).collect { Ball.new(pad, Wall.sections) }
     
-    add(Nimo::QuadRepresentation.for(ball, :color => ball.color).
-      always { move }.
-      listen_to(:color_change) { |representation, object| representation.color = ball.color })
+    balls.each do |ball|
+      ball.with_deflectors(balls.find_all { |other_ball| other_ball != ball })
+      
+      add(Nimo::QuadRepresentation.for(ball, :color => ball.color).
+        always { move }.
+        listen_to(:color_change) { |representation, object| representation.color = ball.color })
+    end
+      
     add(Nimo::QuadRepresentation.for(pad, :color => Gosu::white).
       when_key(Gosu::Button::KbLeft) { move_left }.
       when_key(Gosu::Button::KbRight) { move_right }.
@@ -59,13 +70,17 @@ end
 
 
 class Ball < Nimo::GameObject
+  include Nimo::Behavior::Deflector
   include Nimo::Behavior::Projectile
   
   def initialize(*deflectors)
-    super(:x => 200, :y => 200, :width => 10, :height => 10, :velocity => Nimo::Behavior::Velocity.new(0.2, 0.7), :speed => 10)
+    random_velocity = Nimo::Behavior::Velocity.new(0, 1)
+    random_velocity.adjust(rand + -rand)
+    
+    super(:x => 200, :y => 200, :width => 10, :height => 10, :velocity => random_velocity, :speed => 10)
     with_deflectors(deflectors)
     
-    @colors = [Gosu::red, Gosu::green, Gosu::yellow]
+    @colors = [Gosu::red, Gosu::green, Gosu::yellow, Gosu::blue, Gosu::white]
     @color_index = 0
   end
   

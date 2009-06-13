@@ -2,11 +2,7 @@ module Nimo
   
   class TextRepresentation < ObjectRepresentation
     attr_accessor :color
-    
-    def self.for(params)
-      new(nil, Nimo::GameObject.new(:x => params[:x], :y => params[:y]), params)
-    end
-  
+
     def initialize(game_window, game_object, params)
       super(game_window, game_object)
       @color = params[:color]

@@ -13,7 +13,7 @@ WINDOW_HEIGHT = 480
 
 class StartScreen < Nimo::Screen
   def representations
-    add(Nimo::TextRepresentation.for(:x => 10, :y => 200, :color => Gosu::white,
+    add(Nimo::TextRepresentation.at(:x => 10, :y => 200, :color => Gosu::white,
       :text => "StartScreen: press any key to go to the GameScreen"))
   end
   
@@ -25,7 +25,7 @@ end
 
 class GameScreen < Nimo::Screen
   def representations
-    add(Nimo::TextRepresentation.for(:x => 10, :y => 10, :color => Gosu::white,
+    add(Nimo::TextRepresentation.at(:x => 10, :y => 10, :color => Gosu::white,
       :text => "GameScreen: press any key to open the MenuScreen"))
     
     balls = (0..19).collect { Ball.new(Wall.sections) }
@@ -43,11 +43,11 @@ end
 
 class MenuScreen < Nimo::Screen
   def representations
-    add(Nimo::TextRepresentation.for(:x => 100, :y => 200, :color => Gosu::white, :size => 15,
+    add(Nimo::TextRepresentation.at(:x => 100, :y => 200, :color => Gosu::white, :size => 15,
       :text => "MenuScreen:"))
-    add(Nimo::TextRepresentation.for(:x => 100, :y => 215, :color => Gosu::white, :size => 15,
+    add(Nimo::TextRepresentation.at(:x => 100, :y => 215, :color => Gosu::white, :size => 15,
       :text => "- <ESC> to go to the EndScreen"))
-    add(Nimo::TextRepresentation.for(:x => 100, :y => 230, :color => Gosu::white, :size => 15,
+    add(Nimo::TextRepresentation.at(:x => 100, :y => 230, :color => Gosu::white, :size => 15,
       :text => "- <ENTER> to go to the GameScreen"))
   end
   
@@ -60,7 +60,7 @@ end
 
 class EndScreen < Nimo::Screen
   def representations
-    add(Nimo::TextRepresentation.for(:x => 10, :y => 200, :color => Gosu::white,
+    add(Nimo::TextRepresentation.at(:x => 10, :y => 200, :color => Gosu::white,
       :text => "EndScreen: you've reached the end of this example!"))
   end
   

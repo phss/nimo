@@ -20,6 +20,10 @@ module Nimo
       self.new(nil, game_object, params)
     end
     
+    def self.at(params = {})
+      self.for(Nimo::GameObject.new(params), params)
+    end
+    
     # Hook to load data (i.e. images and fonts) from the game window. TODO not a great solution
     def load
     end

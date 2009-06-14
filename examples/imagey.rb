@@ -28,6 +28,7 @@ end
 class GameScreen < Nimo::Screen
   
   def representations
+    Dungeon.representation.each { |block| add(block) }
     add(Nimo::ImageRepresentation.for(Player.new, :file => "examples/images/dg_classm32.png", :index => 85).
       when_key(Gosu::Button::KbLeft, :repeatable => false) { move_left }.
       when_key(Gosu::Button::KbRight, :repeatable => false) { move_right }.
@@ -45,7 +46,36 @@ class Player < Nimo::GameObject
   include Nimo::Behavior::Moveable
   
   def initialize
-    super(:x => 0, :y => 0, :width => 32, :height => 32, :speed => 32, :boundary => Object.from_hash(WINDOW))
+    super(:x => 32, :y => 32, :width => 32, :height => 32, :speed => 32, 
+          :boundary => Object.from_hash(:x => 32, :y => 32, :width => WINDOW_WIDTH - 32, :height => WINDOW_HEIGHT - 32))
+  end
+end
+
+class Dungeon
+  # A bit hacktastic!
+  def self.representation
+    map_file = "examples/images/dg_dungeon32.png"
+    map_config = {:width => 32, :height => 32, :file => map_file}
+    representations = []
+    
+    16.times do |x|
+      15.times do |y|
+        if x == 0 || x == 15 || y == 0 || y == 14
+          representations << Nimo::ImageRepresentation.at(map_config.merge(:x => x*32, :y => y*32, :index => 2))
+        else
+          representations << Nimo::ImageRepresentation.at(map_config.merge(:x => x*32, :y => y*32, :index => 79))
+        end
+      end
+    end
+    representations << Nimo::ImageRepresentation.at(map_config.merge(:x => 7*32, :y => 0, :index => 1))
+    representations << Nimo::ImageRepresentation.at(map_config.merge(:x => 8*32, :y => 0, :index => 20))
+    representations << Nimo::ImageRepresentation.at(map_config.merge(:x => 9*32, :y => 0, :index => 1))
+    
+    representations << Nimo::ImageRepresentation.at(map_config.merge(:x => 7*32, :y => 4*32, :index => 85))
+    representations << Nimo::ImageRepresentation.at(map_config.merge(:x => 3*32, :y => 13*32, :index => 85))
+    representations << Nimo::ImageRepresentation.at(map_config.merge(:x => 14*32, :y => 3*32, :index => 85))
+    
+    return representations
   end
 end
 

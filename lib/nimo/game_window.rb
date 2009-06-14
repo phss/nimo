@@ -2,11 +2,13 @@ module Nimo
   
   class GameWindow < Gosu::Window
     
-    attr_reader :current_screen
+    attr_reader :current_screen, :resource_loader
     
     def initialize(name, width, height)
       super(width, height, false)
       self.caption = name
+      
+      @resource_loader = ResourceLoader.new(self)
       
       @screens = {}
       @background_screens = []

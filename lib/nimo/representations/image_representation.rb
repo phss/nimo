@@ -10,9 +10,9 @@ module Nimo
     
     def load
       if @index.nil?
-        @image = Gosu::Image.new(@game_window, @file, 0)
+        @image = @game_window.resource_loader.load_image(@file)
       else
-        @image = Gosu::Image.load_tiles(@game_window, @file, @game_object.width, @game_object.height, false)[@index]
+        @image = @game_window.resource_loader.load_image_tiles(@file, @game_object.width, @game_object.height)[@index]
       end
     end
   

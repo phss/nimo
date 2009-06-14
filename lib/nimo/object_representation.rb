@@ -11,6 +11,7 @@ module Nimo
     def initialize(game_window, game_object, params = {})
       @game_window = game_window
       @game_object = game_object
+      
       @always_actions = []
       @key_actions = {}
       @listener_actions = {}
@@ -28,20 +29,22 @@ module Nimo
     def load
     end
 
-    # Always execute the action on a game update
+    # Register and action that always execute on a game update.
     def always(&action)
       @always_actions << action
       self
     end
 
-    # Execute the action when the key is pressed
-    def when_key(key, &action)
+    # Register an action that will execute when the key is pressed.
+    # An options hash can be specified to customise the behavior. The options are:
+    # - :repeatable (defaults to true) - execute the action every update regardless if the key was already pressed in the previous update.
+    def when_key(key, options = {}, &action)
       key = @game_window.char_to_button_id(key) if key.class == String
-      @key_actions[key] = action
+      @key_actions[key] = KeyAction.new(action, options)
       self
     end
     
-    # Execute the action when the game object sends a notification
+    # Register an action that will execute when the game object sends a notification.
     def listen_to(event_type, &action)
       @listener_actions[event_type] = action
       game_object.register_listener(event_type, self)
@@ -54,13 +57,38 @@ module Nimo
 
     def update
       @always_actions.each { |action| @game_object.instance_eval(&action) }
-      @key_actions.each { |key, action| @game_object.instance_eval(&action) if @game_window.button_down?(key) }
+      @key_actions.each do |key, key_action|
+        @game_object.instance_eval(&key_action.action) if key_action.should_execute?(@game_window.button_down?(key))
+      end
     end
 
     # Should be overriden by childs
     def draw
     end
 
+  end
+  
+end
+
+class KeyAction
+  
+  attr_reader :action
+  
+  def initialize(action, options)
+    @action = action
+    @options = {:repeatable => true}.merge(options)
+    @pressed_since = nil
+  end
+  
+  def should_execute?(is_button_down)
+    should_execute = false
+    if is_button_down
+      should_execute = @pressed_since.nil? || @options[:repeatable]
+      @pressed_since = Time.now if @pressed_since.nil?
+    else
+      @pressed_since = nil
+    end
+    return should_execute
   end
   
 end

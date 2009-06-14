@@ -28,11 +28,11 @@ end
 class GameScreen < Nimo::Screen
   
   def representations
-    add(Nimo::ImageRepresentation.for(Player.new, :file => "examples/images/dg_classm32.png", :index => 21).
-      when_key(Gosu::Button::KbLeft) { move_left }.
-      when_key(Gosu::Button::KbRight) { move_right }.
-      when_key(Gosu::Button::KbUp) { move_up }.
-      when_key(Gosu::Button::KbDown) { move_down })
+    add(Nimo::ImageRepresentation.for(Player.new, :file => "examples/images/dg_classm32.png", :index => 85).
+      when_key(Gosu::Button::KbLeft, :repeatable => false) { move_left }.
+      when_key(Gosu::Button::KbRight, :repeatable => false) { move_right }.
+      when_key(Gosu::Button::KbUp, :repeatable => false) { move_up }.
+      when_key(Gosu::Button::KbDown, :repeatable => false) { move_down })
   end
   
   def button_down(id)

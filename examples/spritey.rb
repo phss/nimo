@@ -33,14 +33,12 @@ class GameScreen < Nimo::Screen
       when_key(Gosu::Button::KbLeft) { move_left }.
       when_key(Gosu::Button::KbRight) { move_right }.
       when_key(Gosu::Button::KbUp) { jump }.
-      with_animation({:action => :stopped, :direction => :right}, [0]).
-      with_animation({:action => :walking, :direction => :right}, [1, 2, 3, 4]).
-      with_animation({:action => :jumping, :direction => :right}, [5, 6, 7], :loop => false).
-      with_animation({:action => :falling, :direction => :right}, [8, 9], :loop => false).
-      with_animation({:action => :stopped, :direction => :left}, [0], :flipped => true).
-      with_animation({:action => :walking, :direction => :left}, [1, 2, 3, 4], :flipped => true).
-      with_animation({:action => :jumping, :direction => :left}, [5, 6, 7], :loop => false, :flipped => true).
-      with_animation({:action => :falling, :direction => :left}, [8, 9], :loop => false, :flipped => true))
+      with_animation(:stopped, [0]).
+      with_animation(:walking, [1, 2, 3, 4]).
+      with_animation(:jumping, [5, 6, 7], :loop => false).
+      with_animation(:falling, [8, 9], :loop => false).
+      listen_to(:go_left) { |rep, obj| rep.flip = true }.
+      listen_to(:go_right) { |rep, obj| rep.flip = false })
   end
   
   def button_down(id)
@@ -55,35 +53,34 @@ class Player < Nimo::GameObject
   
   def initialize
     super(:x => 0, :y => WINDOW_HEIGHT - 62, :width => 48, :height => 62, :speed => 5,
-          :current_state => {:action => :stopped, :direction => :right})
+          :current_state => :stopped)
   end
   
   def move_left
     @velocity.x = -1
-    change_to(:direction => :left)
-    change_to(:action => :walking) if @current_state[:action] == :stopped
+    notify(:go_left)
+    change_to(:walking) if @current_state == :stopped
   end
   
   def move_right
     @velocity.x = 1
-    notify(:walk)
-    change_to(:direction => :right)
-    change_to(:action => :walking) if @current_state[:action] == :stopped
+    notify(:go_right)
+    change_to(:walking) if @current_state == :stopped
   end
   
   def stop
     @velocity.x = 0
-    change_to(:action => :stopped) unless [:walking, :jumping, :falling].include?(@current_state[:action])
+    change_to(:stopped) unless [:walking, :jumping, :falling].include?(@current_state)
   end
   
   def gravity
     if y < WINDOW_HEIGHT - 62
       @velocity.y += 0.01
-      change_to(:action => :falling) if @velocity.y > 0
+      change_to(:falling) if @velocity.y > 0
     else
       @velocity.y = 0
       @y = WINDOW_HEIGHT - 62
-      change_to(:action => :stopped)
+      change_to(:stopped)
     end
   end
   
@@ -91,9 +88,8 @@ class Player < Nimo::GameObject
     # Cannot jump twice
     if y >= WINDOW_HEIGHT - 62
       @velocity.y = -1
-      notify(:jump)
+      change_to(:jumping)
     end
-    change_to(:action => :jumping)
   end
 end
 

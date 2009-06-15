@@ -1,12 +1,15 @@
 module Nimo
   
   class SpriteRepresentation < ObjectRepresentation
+      attr_accessor :flip
+    
       def initialize(game_window, game_object, params)
         super(game_window, game_object)
         @file = params[:file]
         
         @animations = {}
         @current_animation = nil
+        @flip = false
       end
 
       def load
@@ -14,11 +17,11 @@ module Nimo
       end
 
       def draw
-        if @current_animation.name.to_s != @game_object.current_state.to_s && @animations.has_key?(@game_object.current_state.to_s)
-           @current_animation = @animations[@game_object.current_state.to_s]
+        if @current_animation.name != @game_object.current_state && @animations.has_key?(@game_object.current_state)
+           @current_animation = @animations[@game_object.current_state]
            @current_animation.reset_animation
         end
-        if @current_animation.flip?
+        if flip
           @sprite_tiles[@current_animation.frame_index].draw(@game_object.x + @game_object.width, @game_object.y, 0, -1)
         else
           @sprite_tiles[@current_animation.frame_index].draw(@game_object.x, @game_object.y, 0)
@@ -27,8 +30,8 @@ module Nimo
       
       # List options.
       def with_animation(name, frame_indexes, options = {})
-        @animations[name.to_s] = Animation.new(name, frame_indexes, options)
-        @current_animation = @animations[name.to_s] if @current_animation.nil?
+        @animations[name] = Animation.new(name, frame_indexes, options)
+        @current_animation = @animations[name] if @current_animation.nil?
         self
       end
     end
@@ -39,7 +42,7 @@ module Nimo
       def initialize(name, frame_indexes, options)
         @name = name
         @frame_indexes = frame_indexes
-        @options = {:timeout => 0.1, :loop => true, :flipped => false}.merge(options)
+        @options = {:timeout => 0.1, :loop => true}.merge(options)
         reset_animation
       end
       
@@ -57,10 +60,6 @@ module Nimo
           end
         end
         @frame_indexes[@current_index]
-      end
-      
-      def flip?
-        @options[:flipped]
       end
     end
 end

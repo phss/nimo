@@ -37,8 +37,8 @@ class GameScreen < Nimo::Screen
       with_animation(:walking, [1, 2, 3, 4]).
       with_animation(:jumping, [5, 6, 7], :loop => false).
       with_animation(:falling, [8, 9], :loop => false).
-      listen_to(:go_left) { |rep, obj| rep.flip = true }.
-      listen_to(:go_right) { |rep, obj| rep.flip = false })
+      listen_to(:go_left) { |rep, obj| rep.flip }.
+      listen_to(:go_right) { |rep, obj| rep.unflip })
   end
   
   def button_down(id)

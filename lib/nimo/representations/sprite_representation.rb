@@ -9,11 +9,19 @@ module Nimo
         
         @animations = {}
         @current_animation = nil
-        @flip = false
+        unflip
       end
 
       def load
         @sprite_tiles = @game_window.resource_loader.load_image_tiles(@file, @game_object.width, @game_object.height)
+      end
+      
+      def flip
+        @drawing = lambda { |sprite| sprite.draw(@game_object.x + @game_object.width, @game_object.y, 0, -1) }
+      end
+      
+      def unflip
+        @drawing = lambda { |sprite| sprite.draw(@game_object.x, @game_object.y, 0) }
       end
 
       def draw
@@ -21,14 +29,14 @@ module Nimo
            @current_animation = @animations[@game_object.current_state]
            @current_animation.reset_animation
         end
-        if flip
-          @sprite_tiles[@current_animation.frame_index].draw(@game_object.x + @game_object.width, @game_object.y, 0, -1)
-        else
-          @sprite_tiles[@current_animation.frame_index].draw(@game_object.x, @game_object.y, 0)
-        end
+        @drawing.call(@sprite_tiles[@current_animation.frame_index])
       end
       
-      # List options.
+      # Adds a new animation to the sprite. The first animation will be set as the current.
+      # A list of options can be specified to customise the behavior:
+      # - :timeout (default is 0.1): time to wait between frames
+      # - :loop (default is true): true if the animation should start from the beginning, after the last element,
+      #       otherwise it will draw the last frame
       def with_animation(name, frame_indexes, options = {})
         @animations[name] = Animation.new(name, frame_indexes, options)
         @current_animation = @animations[name] if @current_animation.nil?

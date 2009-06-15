@@ -2,6 +2,11 @@
 
 Description goes here.
 
+== TODO
+
+- Create more examples: texty (bitmap and gosu fonts), soundy (playing with gosu music and sample) and configy (configuring screens and stuff through external files?)
+- Add stuff to this README.
+
 == Copyright
 
 Copyright (c) 2009 moonpxi. See LICENSE for details.

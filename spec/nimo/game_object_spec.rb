@@ -168,44 +168,27 @@ describe Nimo::GameObject do
   end
   
   describe "(state)" do
-		it "should have no inital current state if not specified" do
-			Nimo::GameObject.new.current_state.should be_nil
-		end
-		
-		it "should have specified initial current state" do
-			Nimo::GameObject.new(:current_state => :some_state).current_state.should == :some_state
-		end
+    it "should have no inital current state if not specified" do
+      Nimo::GameObject.new.current_state.should be_nil
+    end
+  
+    it "should have specified initial current state" do
+      Nimo::GameObject.new(:current_state => :some_state).current_state.should == :some_state
+    end
 
-		it "should notify listeners when changing state" do
-			mock_listener = mock("listener")
-      mock_listener.should_receive(:notify).with(:some_state)
-      
+    it "should change and notify composite state" do
       obj = Nimo::GameObject.new
-      obj.register_listener(:some_state, mock_listener)
-      obj.change_to(:some_state)
-			
-			obj.current_state.should == :some_state
-		end
-
-		it "should change and notify composite state" do
-			mock_listener = mock("listener")
-      mock_listener.should_receive(:notify).with(:s1 => :some_state, :s2 => :another_state)
-      
-      obj = Nimo::GameObject.new
-      obj.register_listener({:s1 => :some_state, :s2 => :another_state}, mock_listener)
       obj.change_to(:s2 => :another_state, :s1 => :some_state)
-		end
-		
-		it "should change and notify element of the composite state" do
-			mock_listener = mock("listener")
-      mock_listener.should_receive(:notify).with(:s1 => :some_state, :s2 => :another_state)
-      
+
+      obj.current_state.should == { :s1 => :some_state, :s2 => :another_state }
+    end
+  
+    it "should change and notify element of the composite state" do
       obj = Nimo::GameObject.new(:current_state => {:s1 => :some_state, :s2 => :previous_state})
-      obj.register_listener({:s1 => :some_state, :s2 => :another_state}, mock_listener)
       obj.change_to(:s2 => :another_state)
-			
-			obj.current_state.should == { :s1 => :some_state, :s2 => :another_state }
-		end
+    
+      obj.current_state.should == { :s1 => :some_state, :s2 => :another_state }
+    end
 
   end
     

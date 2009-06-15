@@ -1,8 +1,12 @@
 module Nimo
   
   #
-  # Base game domain object containing position and dimension data. Any object that represents
+  # Base game domain object containing position, dimension and state information. Any object that represents
   # a game entity should extend this class.
+  # 
+  # The position (:x and :y) and dimension (:width and :height) are used for visual representations and any 
+  # useful game behavior. The state (:current_state) is mostly optional, being used for Nimo::SpriteRepresentation
+  # to know what animation to draw. It can also be handy or complex behavior.
   #
   class GameObject
     attr_accessor :x, :y, :width, :height, :current_state
@@ -51,8 +55,7 @@ module Nimo
     end
 
     def change_to(state)
-			@current_state = @current_state.is_a?(Hash) ? @current_state.merge(state) : state
-			notify(@current_state)
+      @current_state = @current_state.is_a?(Hash) ? @current_state.merge(state) : state
     end
     
   end

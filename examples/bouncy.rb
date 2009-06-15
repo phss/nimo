@@ -4,6 +4,8 @@
 # Example using deflectors, projectiles and moveable behaviors. It demonstrates how to create interacting
 # objects and representations
 # 
+# TODO: collision behavior is still a bit wonky. Balls disappear at the edge of the screen sometimes.
+#
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'nimo'
@@ -30,7 +32,8 @@ class GameScreen < Nimo::Screen
       when_key(Gosu::Button::KbLeft) { move_left }.
       when_key(Gosu::Button::KbRight) { move_right }.
       when_key(Gosu::Button::KbUp) { move_up }.
-      when_key(Gosu::Button::KbDown) { move_down })
+      when_key(Gosu::Button::KbDown) { move_down }.
+      when_key(Gosu::Button::KbSpace) { balls.each { |ball| ball.speed,ball.old_speed = ball.old_speed,ball.speed }  })
   end
   
   def button_down(id)
@@ -72,12 +75,15 @@ end
 class Ball < Nimo::GameObject
   include Nimo::Behavior::Deflector
   include Nimo::Behavior::Projectile
-  
+ 
+  attr_accessor :speed, :old_speed
+
+
   def initialize(*deflectors)
     random_velocity = Nimo::Behavior::Velocity.new(0, 1)
     random_velocity.adjust(rand + -rand)
     
-    super(:x => 200, :y => 200, :width => 10, :height => 10, :velocity => random_velocity, :speed => 10)
+    super(:x => 200, :y => 200, :width => 10, :height => 10, :velocity => random_velocity, :speed => 10, :old_speed => 0)
     with_deflectors(deflectors)
     
     @colors = [Gosu::red, Gosu::green, Gosu::yellow, Gosu::blue, Gosu::white]

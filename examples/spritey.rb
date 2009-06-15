@@ -29,7 +29,7 @@ class GameScreen < Nimo::Screen
   def representations
     add(Nimo::QuadRepresentation.at(WINDOW.merge(:color => Gosu::white)))
     add(Nimo::SpriteRepresentation.for(Player.new, :file => "examples/images/tcheco.png").
-      always { move; stop; gravity }.
+      always { move }.
       when_key(Gosu::Button::KbLeft) { move_left }.
       when_key(Gosu::Button::KbRight) { move_right }.
       when_key(Gosu::Button::KbUp) { jump }.
@@ -49,45 +49,44 @@ end
 
 # TODO this is not a great implementation of a plataform character. Should think about creating a new behavior.
 class Player < Nimo::GameObject
-  include Nimo::Behavior::Projectile
   
   def initialize
     super(:x => 0, :y => WINDOW_HEIGHT - 62, :width => 48, :height => 62, :speed => 5,
           :current_state => :stopped)
+    @y_velocity = 0
   end
   
   def move_left
-    @velocity.x = -1
+    @x -= @speed
     notify(:go_left)
     change_to(:walking) if @current_state == :stopped
   end
   
   def move_right
-    @velocity.x = 1
+    @x += @speed
     notify(:go_right)
     change_to(:walking) if @current_state == :stopped
   end
   
-  def stop
-    @velocity.x = 0
-    change_to(:stopped) unless [:walking, :jumping, :falling].include?(@current_state)
-  end
-  
-  def gravity
+  def move
     if y < WINDOW_HEIGHT - 62
-      @velocity.y += 0.01
-      change_to(:falling) if @velocity.y > 0
+      @y_velocity += 0.01
+      change_to(:falling) if @y_velocity > 0
     else
-      @velocity.y = 0
+      @y_velocity = 0
       @y = WINDOW_HEIGHT - 62
       change_to(:stopped)
     end
+    
+    @y += @speed * @y_velocity
+    change_to(:stopped) unless [:walking, :jumping, :falling].include?(@current_state)
   end
   
   def jump
     # Cannot jump twice
     if y >= WINDOW_HEIGHT - 62
-      @velocity.y = -1
+      @y_velocity = -1
+      @y += @speed * @y_velocity
       change_to(:jumping)
     end
   end

@@ -4,6 +4,7 @@
 # Demonstrate how to load and use whole images and sub-images as representations.
 # The character and dungeon images were retrieved from: http://www.molotov.nu/?page=graphics
 # 
+# TODO Add better boundary check for trees
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'nimo'

@@ -49,42 +49,43 @@ end
 
 # TODO this is not a great implementation of a plataform character. Should think about creating a new behavior.
 class Player < Nimo::GameObject
-  
+	include Nimo::Behavior::Moveable
+ 	#include Nimo::Behavior::Jumper
+
   def initialize
     super(:x => 0, :y => WINDOW_HEIGHT - 62, :width => 48, :height => 62, :speed => 5,
-          :current_state => :stopped)
+          :current_state => :stopped, :boundary => Object.from_hash(WINDOW))
     @y_velocity = 0
   end
   
   def move_left
-    @x -= @speed
+		super()
     notify(:go_left)
     change_to(:walking) if @current_state == :stopped
   end
   
   def move_right
-    @x += @speed
+    super()
     notify(:go_right)
     change_to(:walking) if @current_state == :stopped
   end
   
   def move
-    if y < WINDOW_HEIGHT - 62
+    if y < @boundary.height - @height
       @y_velocity += 0.01
       change_to(:falling) if @y_velocity > 0
     else
       @y_velocity = 0
-      @y = WINDOW_HEIGHT - 62
       change_to(:stopped)
     end
     
     @y += @speed * @y_velocity
-    change_to(:stopped) unless [:walking, :jumping, :falling].include?(@current_state)
+   # change_to(:stopped) unless [:walking, :jumping, :falling].include?(@current_state)
   end
   
   def jump
     # Cannot jump twice
-    if y >= WINDOW_HEIGHT - 62
+    if @y >= @boundary.height - @height
       @y_velocity = -1
       @y += @speed * @y_velocity
       change_to(:jumping)

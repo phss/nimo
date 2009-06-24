@@ -55,11 +55,19 @@ module Nimo
       @listener_actions[event_type].call(self, game_object) if @listener_actions.has_key? event_type
     end
 
+		# Register an observer to be invoked every update, after all actions runned. This could be useful when a more complex behavior
+		# is required from the representation, and there is a need to inspect the game object to change some state.
+		def with_observer(&observer)
+			@observer = observer
+			self
+		end
+
     def update
       @always_actions.each { |action| @game_object.instance_eval(&action) }
       @key_actions.each do |key, key_action|
         @game_object.instance_eval(&key_action.action) if key_action.should_execute?(@game_window.button_down?(key))
       end
+			@observer.call(self, game_object) unless @observer.nil?
     end
 
     # Should be overriden by childs

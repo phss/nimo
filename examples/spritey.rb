@@ -27,6 +27,10 @@ end
 class GameScreen < Nimo::Screen
   
   def representations
+		player_observer = Proc.new do |rep, ob|
+			puts "asdf"
+		end
+
     add(Nimo::QuadRepresentation.at(WINDOW.merge(:color => Gosu::white)))
     add(Nimo::SpriteRepresentation.for(Player.new, :file => "examples/images/tcheco.png").
       always { move }.
@@ -37,8 +41,7 @@ class GameScreen < Nimo::Screen
       with_animation(:walking, [1, 2, 3, 4]).
       with_animation(:jumping, [5, 6, 7], :loop => false).
       with_animation(:falling, [8, 9], :loop => false).
-      listen_to(:go_left) { |rep, obj| rep.flip }.
-      listen_to(:go_right) { |rep, obj| rep.unflip })
+			with_observer(&player_observer))
   end
   
   def button_down(id)
@@ -60,13 +63,11 @@ class Player < Nimo::GameObject
   
   def move_left
 		super()
-    notify(:go_left)
     change_to(:walking) if @current_state == :stopped
   end
   
   def move_right
     super()
-    notify(:go_right)
     change_to(:walking) if @current_state == :stopped
   end
   

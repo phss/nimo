@@ -9,6 +9,7 @@ module Nimo
         
         @animations = {}
         @current_animation = nil
+				@next_animation = nil
         unflip
       end
 
@@ -24,9 +25,13 @@ module Nimo
         @drawing = lambda { |sprite| sprite.draw(@game_object.x, @game_object.y, 0) }
       end
 
+			def change_to(animation_name)
+				@next_animation = animation_name
+			end
+
       def draw
-        if @current_animation.name != @game_object.current_state && @animations.has_key?(@game_object.current_state)
-           @current_animation = @animations[@game_object.current_state]
+        if @current_animation.name != @next_animation && @animations.has_key?(@next_animation)
+           @current_animation = @animations[@next_animation]
            @current_animation.reset_animation
         end
         @drawing.call(@sprite_tiles[@current_animation.frame_index])

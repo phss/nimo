@@ -10,8 +10,8 @@ describe Nimo::SpriteRepresentation do
     @mock_window.should_receive(:resource_loader).and_return(mock_loader)
     mock_loader.should_receive(:load_image_tiles).and_return(@tiles)
     
-    @obj = Nimo::GameObject.new(:x => 0, :y => 0, :width => 20, :height => 20, :current_state => :state_one)
-    @sprite = Nimo::SpriteRepresentation.new(@mock_window, @obj, {}).
+	  obj = Nimo::GameObject.new(:x => 0, :y => 0, :width => 20, :height => 20, :current_state => :state_one)
+    @sprite = Nimo::SpriteRepresentation.new(@mock_window, obj, {}).
       with_animation(:state_one, [0, 1]).
       with_animation(:state_two, [2, 3], :loop => false)
     @sprite.load
@@ -42,12 +42,12 @@ describe Nimo::SpriteRepresentation do
     3.times { @sprite.draw; sleep 0.2 }
   end
   
-  it "should change animation when game object changes state" do
+  it "should change animation when changing state" do
     @tiles[0].should_receive(:draw).with(0, 0, 0)
     @tiles[2].should_receive(:draw).with(0, 0, 0)
     
     @sprite.draw
-    @obj.change_to(:state_two)
+    @sprite.change_to(:state_two)
     @sprite.draw
   end
   
@@ -55,7 +55,7 @@ describe Nimo::SpriteRepresentation do
     @tiles[0].should_receive(:draw).twice.with(0, 0, 0)
     
     @sprite.draw
-    @obj.change_to(:state_none)
+    @sprite.change_to(:state_none)
     @sprite.draw
   end
   
@@ -63,7 +63,7 @@ describe Nimo::SpriteRepresentation do
     @tiles[2].should_receive(:draw).with(0, 0, 0)
     @tiles[3].should_receive(:draw).twice.with(0, 0, 0)
     
-    @obj.change_to(:state_two)
+    @sprite.change_to(:state_two)
     3.times { @sprite.draw; sleep 0.2 }
   end
 end

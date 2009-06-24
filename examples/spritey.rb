@@ -27,8 +27,8 @@ end
 class GameScreen < Nimo::Screen
   
   def representations
-		player_observer = Proc.new do |rep, ob|
-			puts "asdf"
+		player_observer = Proc.new do |rep, obj|
+		  
 		end
 
     add(Nimo::QuadRepresentation.at(WINDOW.merge(:color => Gosu::white)))

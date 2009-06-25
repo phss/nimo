@@ -58,7 +58,6 @@ end
 
 class Player < Nimo::GameObject
 	include Nimo::Behavior::WithVelocity
- 	#include Nimo::Behavior::Jumper
 
   def initialize
     super(:x => 0, :y => WINDOW_HEIGHT - 62, :width => 48, :height => 62, :speed => 5,

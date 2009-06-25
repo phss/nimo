@@ -28,7 +28,13 @@ class GameScreen < Nimo::Screen
   
   def representations
 		player_observer = Proc.new do |rep, obj|
-		  
+		  rep.flip if obj.velocity.x < 0
+		  rep.unflip if obj.velocity.x > 0	
+
+			rep.change_to(:stopped) if obj.velocity.x == 0
+			rep.change_to(:walking) if obj.velocity.x != 0
+			rep.change_to(:jumping) if obj.velocity.y < 0
+			rep.change_to(:falling) if obj.velocity.y > 0
 		end
 
     add(Nimo::QuadRepresentation.at(WINDOW.merge(:color => Gosu::white)))
@@ -50,46 +56,39 @@ class GameScreen < Nimo::Screen
   
 end
 
-# TODO this is not a great implementation of a plataform character. Should think about creating a new behavior.
 class Player < Nimo::GameObject
-	include Nimo::Behavior::Moveable
+	include Nimo::Behavior::WithVelocity
  	#include Nimo::Behavior::Jumper
 
   def initialize
     super(:x => 0, :y => WINDOW_HEIGHT - 62, :width => 48, :height => 62, :speed => 5,
           :current_state => :stopped, :boundary => Object.from_hash(WINDOW))
-    @y_velocity = 0
   end
   
   def move_left
-		super()
-    change_to(:walking) if @current_state == :stopped
+		@velocity.x = -1	  
   end
   
   def move_right
-    super()
-    change_to(:walking) if @current_state == :stopped
+		@velocity.x = 1
   end
   
   def move
+		super
     if y < @boundary.height - @height
-      @y_velocity += 0.01
-      change_to(:falling) if @y_velocity > 0
+      @velocity.y += 0.01
     else
-      @y_velocity = 0
-      change_to(:stopped)
+      @velocity.y = 0
     end
-    
-    @y += @speed * @y_velocity
-   # change_to(:stopped) unless [:walking, :jumping, :falling].include?(@current_state)
+  
+	  @velocity.x = 0	
   end
   
   def jump
     # Cannot jump twice
     if @y >= @boundary.height - @height
-      @y_velocity = -1
-      @y += @speed * @y_velocity
-      change_to(:jumping)
+      @velocity.y = -1
+      @y += @speed * @velocity.y
     end
   end
 end

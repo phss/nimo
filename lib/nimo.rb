@@ -18,6 +18,7 @@ require NIMO_DIR + "/game_object"
 require NIMO_DIR + "/game_window"
 require NIMO_DIR + "/screen"
 
+require NIMO_DIR + "/behavior/with_velocity"
 require NIMO_DIR + "/behavior/deflector"
 require NIMO_DIR + "/behavior/projectile"
 require NIMO_DIR + "/behavior/moveable"

@@ -1,28 +1,16 @@
-module Nimo::Behavior
-  
-  Velocity = Struct.new(:x, :y) do
-    def adjust(radian)
-      xl = Math::cos(radian)*self.x - Math::sin(radian)*self.y
-      yl = Math::sin(radian)*self.x + Math::cos(radian)*self.y
-      self.x = xl
-      self.y = yl
-    end
-  end
+module Nimo::Behavior 
   
   module Projectile
-    attr_reader :velocity
+		include WithVelocity
     
     def initialize(*params)
-      @speed = 0
-      @velocity = Velocity.new(0.0, 0.0)
       @deflectors = []
       super(*params)
     end
     
     def move
       @deflectors.each { |deflector| deflector.deflect(self) }
-      @x += @speed * @velocity.x
-      @y += @speed * @velocity.y
+			super
     end
     
     def with_deflectors(*new_deflectors)

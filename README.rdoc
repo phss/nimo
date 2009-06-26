@@ -4,7 +4,10 @@ Description goes here.
 
 == TODO
 
-- Create more examples: texty (bitmap and gosu fonts), soundy (playing with gosu music and sample) and configy (configuring screens and stuff through external files?)
+- Sort out resource loading, specially for sounds.
+- Create eventy.rb example to demonstrate how to do events (i.e. timers, screen transition hooks, etc).
+- Finish soundy.rb.
+- Create texty.rb to demonstrate 'system' and bitmap fonts.
 - Add stuff to this README.
 
 == Copyright

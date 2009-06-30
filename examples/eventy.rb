@@ -1,8 +1,7 @@
 # 
-# soundy.rb
+# eventy.rb
 # 
-# Demonstrate how to play sounds and background music. 
-# Copyright (sort of): the sounds used here came from my Ubuntu installation (probably from the KDE distribution).
+# Demonstrate how to use on enter and timer events. Not very detailed.
 #
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
@@ -13,8 +12,14 @@ WINDOW_HEIGHT = 480
 
 class MainScreen < Nimo::Screen
   
+  def representations
+    @timer = Timer.new
+    add(Nimo::TextRepresentation.at(:x => 10, :y => 200, :color => Gosu::white,
+      :text => "Will exit in a few seconds"))
+  end
+  
   def on_enter
-    resource_loader.load_sound("examples/sounds/KDE-Sys-Log-Out.ogg").play
+    @timer.start
   end
   
   def button_down(id)

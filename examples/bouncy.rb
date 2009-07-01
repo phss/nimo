@@ -16,7 +16,7 @@ WINDOW_HEIGHT = 480
 
 class GameScreen < Nimo::Screen
   
-  def representations
+  def load
     pad = Pad.new
     balls = (0..19).collect { Ball.new(pad, Wall.sections) }
     

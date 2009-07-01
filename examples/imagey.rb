@@ -15,7 +15,7 @@ WINDOW = {:x => 0, :y => 0, :width => WINDOW_WIDTH, :height => WINDOW_HEIGHT}
 
 class TitleScreen < Nimo::Screen
   
-  def representations
+  def load
     add(Nimo::QuadRepresentation.at(WINDOW.merge(:color => Gosu::white)))
     add(Nimo::ImageRepresentation.at(:x => 116, :y => 190, :file => "examples/images/jeeklabs.png"))
   end
@@ -28,7 +28,7 @@ end
 
 class GameScreen < Nimo::Screen
   
-  def representations
+  def load
     Dungeon.representation.each { |block| add(block) }
     add(Nimo::ImageRepresentation.for(Player.new, :file => "examples/images/dg_classm32.png", :index => 85).
       when_key(Gosu::Button::KbLeft, :repeatable => false) { move_left }.

@@ -12,7 +12,7 @@ WINDOW_HEIGHT = 480
 
 class MainScreen < Nimo::Screen
   
-  def representations
+  def load
     @timer = Timer.new
     add(Nimo::TextRepresentation.at(:x => 10, :y => 200, :color => Gosu::white,
       :text => "Will exit in a few seconds"))

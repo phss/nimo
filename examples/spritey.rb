@@ -13,7 +13,7 @@ WINDOW = {:x => 0, :y => 0, :width => WINDOW_WIDTH, :height => WINDOW_HEIGHT}
 
 class TitleScreen < Nimo::Screen
   
-  def representations
+  def load
     add(Nimo::QuadRepresentation.at(WINDOW.merge(:color => Gosu::white)))
     add(Nimo::ImageRepresentation.at(:x => 116, :y => 190, :file => "examples/images/jeeklabs.png"))
   end
@@ -26,7 +26,7 @@ end
 
 class GameScreen < Nimo::Screen
   
-  def representations
+  def load
 		player_observer = Proc.new do |rep, obj|
 		  rep.flip if obj.velocity.x < 0
 		  rep.unflip if obj.velocity.x > 0	

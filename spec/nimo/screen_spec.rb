@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 class TestScreen < Nimo::Screen
-  attr_reader :obj_representations
+  attr_reader :representations
   
-  def representations
+  def load
     add(StubRepresentation.for("some string", :param => "blah"))
     add(AnotherStubRepresentation.for("another string"))
     add(Nimo::ObjectRepresentation.for("nimo object"))
@@ -32,12 +32,12 @@ describe Nimo::Screen do
   it "should initialize representations" do
     screen = TestScreen.new(nil)
     
-    stub = screen.obj_representations.find { |r| r.is_a? StubRepresentation }
-    stub.should_not == nil
+    stub = screen.representations.find { |r| r.is_a? StubRepresentation }
+    stub.should_not be_nil
     stub.param.should == "blah"
     
     [AnotherStubRepresentation, Nimo::ObjectRepresentation, SomeModule::ModuleObjectRepresentation].each do |obj_class|
-      screen.obj_representations.find { |r| r.is_a? obj_class }.should_not == nil
+      screen.representations.find { |r| r.is_a? obj_class }.should_not be_nil
     end
   end
   
@@ -63,4 +63,15 @@ describe Nimo::Screen do
     TestScreen.new(mock_window).go_to("Screen")
   end
   
+  it "should register and execute event" do
+    event_called = false
+    
+    screen = TestScreen.new(nil)
+    screen.when(:on_enter) { event_called = true }
+    
+    event_called.should == false
+    screen.notify(:on_enter)
+    event_called.should == true
+  end
+
 end

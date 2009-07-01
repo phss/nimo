@@ -16,7 +16,7 @@ module Nimo
     
     def add_screen(name, screen)
       @screens[name] = screen
-      @current_screen = screen if @screens.size == 1
+      go_to(name) if @screens.size == 1
     end
     
     def add_screens_by_class(*screen_classes)
@@ -26,6 +26,7 @@ module Nimo
     def go_to(screen_name)
       raise "There is no screen named #{screen_name}" unless @screens.has_key? screen_name.to_s
       @current_screen = @screens[screen_name.to_s]
+      @current_screen.notify(:on_enter)
     end
     
     def open_menu(screen_name)

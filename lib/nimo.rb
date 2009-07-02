@@ -12,7 +12,7 @@ NIMO_DIR = File.expand_path(File.dirname(__FILE__) + "/nimo")
 
 require NIMO_DIR + "/utils/object_extension"
 require NIMO_DIR + "/utils/intersection"
-require NIMO_DIR + "/utils/resource_loader"
+require NIMO_DIR + "/utils/resources"
 
 require NIMO_DIR + "/game_object"
 require NIMO_DIR + "/game_window"

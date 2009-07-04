@@ -13,8 +13,8 @@ WINDOW_HEIGHT = 480
 
 class StartScreen < Nimo::Screen
   def load
-    add(Nimo::TextRepresentation.at(:x => 10, :y => 200, :color => Gosu::white,
-      :text => "StartScreen: press any key to go to the GameScreen"))
+    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 200, :font => :main, :color => Gosu::white,
+      :text => "StartScreen: press any key to go to the GameScreen"})
   end
   
   def button_down(id)
@@ -25,13 +25,13 @@ end
 
 class GameScreen < Nimo::Screen
   def load
-    add(Nimo::TextRepresentation.at(:x => 10, :y => 10, :color => Gosu::white,
-      :text => "GameScreen: press any key to open the MenuScreen"))
+    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 10, :font => :main, :color => Gosu::white,
+      :text => "GameScreen: press any key to open the MenuScreen"})
     
     balls = (0..19).collect { Ball.new(Wall.sections) }
     balls.each do |ball|
       ball.with_deflectors(balls.find_all { |other_ball| other_ball != ball })
-      add(Nimo::QuadRepresentation.for(ball, :color => Gosu::red).always { move })
+      add(Nimo::QuadRepresentation, :for => ball, :with => {:color => Gosu::red}).always { move }
     end
   end
   
@@ -43,12 +43,12 @@ end
 
 class MenuScreen < Nimo::Screen
   def load
-    add(Nimo::TextRepresentation.at(:x => 100, :y => 200, :color => Gosu::white, :size => 15,
-      :text => "MenuScreen:"))
-    add(Nimo::TextRepresentation.at(:x => 100, :y => 215, :color => Gosu::white, :size => 15,
-      :text => "- <ESC> to go to the EndScreen"))
-    add(Nimo::TextRepresentation.at(:x => 100, :y => 230, :color => Gosu::white, :size => 15,
-      :text => "- <ENTER> to go to the GameScreen"))
+    add(Nimo::TextRepresentation, :with => {:x => 100, :y => 200, :font => :main, :color => Gosu::white, :size => 15,
+      :text => "MenuScreen:"})
+    add(Nimo::TextRepresentation, :with => {:x => 100, :y => 215, :font => :main, :color => Gosu::white, :size => 15,
+      :text => "- <ESC> to go to the EndScreen"})
+    add(Nimo::TextRepresentation, :with => {:x => 100, :y => 230, :font => :main, :color => Gosu::white, :size => 15,
+      :text => "- <ENTER> to go to the GameScreen"})
   end
   
   def button_down(id)
@@ -60,8 +60,8 @@ end
 
 class EndScreen < Nimo::Screen
   def load
-    add(Nimo::TextRepresentation.at(:x => 10, :y => 200, :color => Gosu::white,
-      :text => "EndScreen: you've reached the end of this example!"))
+    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 200, :font => :main, :color => Gosu::white,
+      :text => "EndScreen: you've reached the end of this example!"})
   end
   
   def button_down(id)
@@ -98,6 +98,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   window = Nimo::GameWindow.new("Screeny", WINDOW_WIDTH, WINDOW_HEIGHT)
+  window.global_resources.with_font(:main, "Helvetica", 20)
   window.add_screens_by_class(StartScreen, GameScreen, MenuScreen, EndScreen)
   window.show
 end

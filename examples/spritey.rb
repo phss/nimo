@@ -14,8 +14,8 @@ WINDOW = {:x => 0, :y => 0, :width => WINDOW_WIDTH, :height => WINDOW_HEIGHT}
 class TitleScreen < Nimo::Screen
   
   def load
-    add(Nimo::QuadRepresentation.at(WINDOW.merge(:color => Gosu::white)))
-    add(Nimo::ImageRepresentation.at(:x => 116, :y => 190, :file => "examples/images/jeeklabs.png"))
+    add(Nimo::QuadRepresentation, :with => WINDOW.merge(:color => Gosu::white))
+    add(Nimo::ImageRepresentation, :with => {:x => 116, :y => 190, :image => :jeeklabs})
   end
   
   def button_down(id)
@@ -37,8 +37,8 @@ class GameScreen < Nimo::Screen
 			rep.change_to(:falling) if obj.velocity.y > 0
 		end
 
-    add(Nimo::QuadRepresentation.at(WINDOW.merge(:color => Gosu::white)))
-    add(Nimo::SpriteRepresentation.for(Player.new, :file => "examples/images/tcheco.png").
+    add(Nimo::QuadRepresentation, :with => WINDOW.merge(:color => Gosu::white))
+    add(Nimo::SpriteRepresentation, :for => Player.new, :with => {:image => :tcheco}).
       always { move }.
       when_key(Gosu::Button::KbLeft) { move_left }.
       when_key(Gosu::Button::KbRight) { move_right }.
@@ -47,7 +47,7 @@ class GameScreen < Nimo::Screen
       with_animation(:walking, [1, 2, 3, 4]).
       with_animation(:jumping, [5, 6, 7], :loop => false).
       with_animation(:falling, [8, 9], :loop => false).
-			with_observer(&player_observer))
+			with_observer(&player_observer)
   end
   
   def button_down(id)
@@ -60,8 +60,7 @@ class Player < Nimo::GameObject
 	include Nimo::Behavior::WithVelocity
 
   def initialize
-    super(:x => 0, :y => WINDOW_HEIGHT - 62, :width => 48, :height => 62, :speed => 5,
-          :current_state => :stopped, :boundary => Object.from_hash(WINDOW))
+    super(:x => 0, :y => WINDOW_HEIGHT - 62, :width => 48, :height => 62, :speed => 5, :boundary => Object.from_hash(WINDOW))
   end
   
   def move_left
@@ -95,6 +94,10 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   window = Nimo::GameWindow.new("Spritey", WINDOW_WIDTH, WINDOW_HEIGHT)
+  window.global_resources.
+    with_image(:jeeklabs, "examples/images/jeeklabs.png").
+    with_image_tiles(:tcheco, "examples/images/tcheco.png", 48, 62)
+  
   window.add_screens_by_class(TitleScreen, GameScreen)
   window.show
 end

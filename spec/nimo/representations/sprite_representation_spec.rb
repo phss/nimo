@@ -4,17 +4,16 @@ describe Nimo::SpriteRepresentation do
   
   before(:each) do
     @mock_window = mock("game window")
-    mock_loader = mock("resource loader")
+    mock_resources = mock("resources")
     @tiles = [mock("sprite tile 1"), mock("sprite tile 2"), mock("sprite tile 3"), mock("sprite tile 4")]
     
-    @mock_window.should_receive(:resource_loader).and_return(mock_loader)
-    mock_loader.should_receive(:load_image_tiles).and_return(@tiles)
+    mock_resources.should_receive(:images).and_return({:test_tiles => @tiles})
     
 	  obj = Nimo::GameObject.new(:x => 0, :y => 0, :width => 20, :height => 20, :current_state => :state_one)
-    @sprite = Nimo::SpriteRepresentation.new(@mock_window, obj, {}).
+    @sprite = Nimo::SpriteRepresentation.new(@mock_window, obj).
       with_animation(:state_one, [0, 1]).
       with_animation(:state_two, [2, 3], :loop => false)
-    @sprite.load
+    @sprite.load(mock_resources, :image => :test_tiles)
   end
   
   it "should draw animation based on game object's current state" do

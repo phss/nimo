@@ -2,19 +2,17 @@ module Nimo
   
   class SpriteRepresentation < ObjectRepresentation
       attr_accessor :flip
-    
-      def initialize(game_window, game_object, params)
+      
+      def initialize(game_window, game_object)
         super(game_window, game_object)
-        @file = params[:file]
-        
         @animations = {}
         @current_animation = nil
 				@next_animation = nil
         unflip
       end
 
-      def load
-        @sprite_tiles = @game_window.resource_loader.load_image_tiles(@file, @game_object.width, @game_object.height)
+      def load(resources, params)
+        @sprite_tiles = resources.images[params[:image]]        
       end
       
       def flip

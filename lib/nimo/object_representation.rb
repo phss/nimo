@@ -8,7 +8,7 @@ module Nimo
     attr_reader :game_object
     attr_accessor :game_window
 
-    def initialize(game_window, game_object, params = {})
+    def initialize(game_window, game_object)
       @game_window = game_window
       @game_object = game_object
       
@@ -16,17 +16,9 @@ module Nimo
       @key_actions = {}
       @listener_actions = {}
     end
-    
-    def self.for(game_object, params = {})
-      self.new(nil, game_object, params)
-    end
-    
-    def self.at(params = {})
-      self.for(Nimo::GameObject.new(params), params)
-    end
-    
+
     # Hook to load data (i.e. images and fonts) from the game window. TODO not a great solution
-    def load
+    def load(resources, params)
     end
 
     # Register and action that always execute on a game update.

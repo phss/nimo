@@ -5,11 +5,12 @@ module Nimo
   # 
   class Resources
 
-    attr_reader :images, :sounds
+    attr_reader :images, :fonts, :sounds
 
     def initialize(game_window)
       @game_window = game_window
       @images = {}
+      @fonts  = {}
       @sounds = {}
     end
   
@@ -20,6 +21,11 @@ module Nimo
   
     def with_image_tiles(tag, filename, tile_width, tile_height)
       @images[tag] ||= Gosu::Image.load_tiles(@game_window, filename, tile_width, tile_height, false)
+      self
+    end
+
+    def with_font(tag, font_type, size)
+      @fonts[tag] ||= Gosu::Font.new(@game_window,font_type, size)
       self
     end
 

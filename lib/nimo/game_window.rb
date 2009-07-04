@@ -2,16 +2,16 @@ module Nimo
   
   class GameWindow < Gosu::Window
     
-    attr_reader :current_screen, :resource_loader
+    attr_reader :current_screen
+    attr_accessor :global_resources
     
     def initialize(name, width, height)
       super(width, height, false)
       self.caption = name
       
-      @resource_loader = ResourceLoader.new(self)
-      
       @screens = {}
       @background_screens = []
+      @global_resources = Nimo::Resources.new(self)
     end
     
     def add_screen(name, screen)
@@ -20,7 +20,7 @@ module Nimo
     end
     
     def add_screens_by_class(*screen_classes)
-      screen_classes.each { |screen_class| add_screen(screen_class.to_s.sub("Screen", ""), screen_class.new(self)) }
+      screen_classes.each { |screen_class| add_screen(screen_class.to_s.sub("Screen", ""), screen_class.new(self, @global_resources)) }
     end
     
     def go_to(screen_name)

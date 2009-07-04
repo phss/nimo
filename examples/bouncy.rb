@@ -23,17 +23,17 @@ class GameScreen < Nimo::Screen
     balls.each do |ball|
       ball.with_deflectors(balls.find_all { |other_ball| other_ball != ball })
       
-      add(Nimo::QuadRepresentation.for(ball, :color => ball.color).
+      add(Nimo::QuadRepresentation, :for => ball, :with => {:color => ball.color}).
         always { move }.
-        listen_to(:color_change) { |representation, object| representation.color = ball.color })
+        listen_to(:color_change) { |representation, object| representation.color = ball.color }
     end
       
-    add(Nimo::QuadRepresentation.for(pad, :color => Gosu::white).
+    add(Nimo::QuadRepresentation, :for => pad, :with => {:color => Gosu::white}).
       when_key(Gosu::Button::KbLeft) { move_left }.
       when_key(Gosu::Button::KbRight) { move_right }.
       when_key(Gosu::Button::KbUp) { move_up }.
       when_key(Gosu::Button::KbDown) { move_down }.
-      when_key(Gosu::Button::KbSpace) { balls.each { |ball| ball.speed,ball.old_speed = ball.old_speed,ball.speed }  })
+      when_key(Gosu::Button::KbSpace) { balls.each { |ball| ball.speed,ball.old_speed = ball.old_speed,ball.speed }  }
   end
   
   def button_down(id)

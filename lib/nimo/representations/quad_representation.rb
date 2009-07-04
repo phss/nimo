@@ -2,10 +2,9 @@ module Nimo
   
   class QuadRepresentation < ObjectRepresentation
     attr_accessor :color
-  
-    def initialize(game_window, game_object, params)
-      super(game_window, game_object)
-      @color = params[:color]
+      
+    def load(resources, params)
+      @color = params[:color]      
     end
   
     def draw

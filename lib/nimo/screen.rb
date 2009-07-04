@@ -2,8 +2,10 @@ module Nimo
   
   class Screen
     
-    def initialize(game_window)
+    def initialize(game_window, resources)
       @game_window = game_window
+      @resources = resources
+      
       @representations = []
       @events = {}
       
@@ -22,10 +24,20 @@ module Nimo
       @representations.each { |representation| representation.draw }
     end
     
-    def add(representation)
-      representation.game_window = @game_window
-      representation.load
+    # Add a representation to the screen. The options params is used to specify a GameObject and params. It returns the 
+    # constructed representation.
+    # Examples of usage:
+    # - screen.add(SomeRepresentation, :for => object, :with => { :attr => "something"}) will construct SomeRepresentation with the supplied object and :with params
+    # - screen.add(SomeRepresentation, :with => { :attr => "something"}) will construct SomeRepresentation with a vanilla Nimo::GameObject
+    def add(representation_class, options)
+      params = options.has_key?(:with) ? options[:with] : {}
+      game_object = options.has_key?(:for) ? options[:for] : Nimo::GameObject.new(params)
+      
+      representation = representation_class.new(@game_window, game_object)
+      representation.load(@resources, params)
+      
       @representations << representation
+      representation
     end
     
     def remove_representation_for(object)

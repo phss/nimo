@@ -13,32 +13,55 @@ require 'nimo'
 WINDOW_WIDTH = 512
 WINDOW_HEIGHT = 480
 
+# class GameScreen < Nimo::Screen
+#   
+#   def load
+#     pad = Pad.new
+#     balls = (0..19).collect { Ball.new(pad, Wall.sections) }
+#     
+#     balls.each do |ball|
+#       ball.with_deflectors(balls.find_all { |other_ball| other_ball != ball })
+#       
+#       add(Nimo::QuadRepresentation, :for => ball, :with => {:color => ball.color}).
+#         always { move }.
+#         listen_to(:color_change) { |representation, object| representation.color = ball.color }
+#     end
+#       
+#     add(Nimo::QuadRepresentation, :for => pad, :with => {:color => Gosu::white}).
+#       when_key(Gosu::Button::KbLeft) { move_left }.
+#       when_key(Gosu::Button::KbRight) { move_right }.
+#       when_key(Gosu::Button::KbUp) { move_up }.
+#       when_key(Gosu::Button::KbDown) { move_down }.
+#       when_key(Gosu::Button::KbSpace) { balls.each { |ball| ball.speed,ball.old_speed = ball.old_speed,ball.speed }  }
+#   end
+#   
+#   def button_down(id)
+#     exit if id == Gosu::Button::KbEscape
+#   end
+#   
+# end
 
 class GameScreen < Nimo::Screen
   
-  def load
-    pad = Pad.new
-    balls = (0..19).collect { Ball.new(pad, Wall.sections) }
-    
+  representations do
     balls.each do |ball|
-      ball.with_deflectors(balls.find_all { |other_ball| other_ball != ball })
-      
-      add(Nimo::QuadRepresentation, :for => ball, :with => {:color => ball.color}).
-        always { move }.
+      representation Nimo::Quad, :for => ball, :with => {:color => ball.color} do
+        always { move }
         listen_to(:color_change) { |representation, object| representation.color = ball.color }
+      end
     end
-      
-    add(Nimo::QuadRepresentation, :for => pad, :with => {:color => Gosu::white}).
-      when_key(Gosu::Button::KbLeft) { move_left }.
-      when_key(Gosu::Button::KbRight) { move_right }.
-      when_key(Gosu::Button::KbUp) { move_up }.
-      when_key(Gosu::Button::KbDown) { move_down }.
-      when_key(Gosu::Button::KbSpace) { balls.each { |ball| ball.speed,ball.old_speed = ball.old_speed,ball.speed }  }
+
+    representation(Nimo::Quad, :for => pad, :with => {:color => Gosu::white}) do
+      when_key(Gosu::Button::KbLeft) { move_left }
+      when_key(Gosu::Button::KbRight) { move_right }
+      when_key(Gosu::Button::KbUp) { move_up }
+      when_key(Gosu::Button::KbDown) { move_down }
+
+      when_key(Gosu::Button::KbSpace) { balls.each { |ball| ball.speed, ball.old_speed = ball.old_speed, ball.speed }  }
+    end
   end
   
-  def button_down(id)
-    exit if id == Gosu::Button::KbEscape
-  end
+  when_key(Gosu::Button::KbEscape) { exit }
   
 end
 

@@ -43,24 +43,23 @@ WINDOW_HEIGHT = 480
 
 class GameScreen < Nimo::Screen
   
-  representations do
-    balls.each do |ball|
-      representation Nimo::Quad, :for => ball, :with => {:color => ball.color} do
-        always { move }
-        listen_to(:color_change) { |representation, object| representation.color = ball.color }
-      end
-    end
-
-    representation(Nimo::Quad, :for => pad, :with => {:color => Gosu::white}) do
-      when_key(Gosu::Button::KbLeft) { move_left }
-      when_key(Gosu::Button::KbRight) { move_right }
-      when_key(Gosu::Button::KbUp) { move_up }
-      when_key(Gosu::Button::KbDown) { move_down }
-
-      when_key(Gosu::Button::KbSpace) { balls.each { |ball| ball.speed, ball.old_speed = ball.old_speed, ball.speed }  }
+    
+  balls.each do |ball|
+    representation Nimo::Quad, :for => ball, :with => {:color => ball.color} do
+      always { move }
+      listen_to(:color_change) { |representation, object| representation.color = ball.color }
     end
   end
-  
+
+  representation(Nimo::Quad, :for => pad, :with => {:color => Gosu::white}) do
+    when_key(Gosu::Button::KbLeft) { move_left }
+    when_key(Gosu::Button::KbRight) { move_right }
+    when_key(Gosu::Button::KbUp) { move_up }
+    when_key(Gosu::Button::KbDown) { move_down }
+
+    when_key(Gosu::Button::KbSpace) { balls.each { |ball| ball.speed, ball.old_speed = ball.old_speed, ball.speed }  }
+  end
+    
   when_key(Gosu::Button::KbEscape) { exit }
   
 end

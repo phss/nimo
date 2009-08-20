@@ -6,7 +6,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'nimo'
 
-Nimo::GameWindow.new("Simplest", 640, 480) do
+Nimo::Game("Simplest", 640, 480) do
   
   screen :game do
     quad :with => { :width => 20, :height => 20, :color => Gosu::white } do
@@ -19,4 +19,4 @@ Nimo::GameWindow.new("Simplest", 640, 480) do
     when_key(Gosu::Button::KbEscape) { exit }
   end
   
-end.show
+end

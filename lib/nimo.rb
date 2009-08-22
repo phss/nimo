@@ -8,11 +8,13 @@ end
 
 require "gosu"
 
-NIMO_DIR = File.expand_path(File.dirname(__FILE__) + "/nimo")
+# NIMO_DIR = File.expand_path(File.dirname(__FILE__) + "/nimo")
+NIMO_DIR = "nimo"
 
 require NIMO_DIR + "/utils/object_extension"
 require NIMO_DIR + "/utils/intersection"
 require NIMO_DIR + "/utils/resources"
+require NIMO_DIR + "/utils/game"
 
 require NIMO_DIR + "/game_object"
 require NIMO_DIR + "/game_window"

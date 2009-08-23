@@ -13,6 +13,15 @@ describe Nimo::Screen do
     event_called.should == true
   end
   
+  it "should register new representation" do
+    screen = Nimo::Screen.new(nil, nil)
+    screen.respond_to?(:new_representation).should be_false
+
+    Nimo::Screen.register_representation(:new_representation, nil)
+    
+    screen.respond_to?(:new_representation).should be_true
+  end
+  
   describe "(loading representations)" do
     before(:each) do
       @representation_class = mock("representation class")

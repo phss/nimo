@@ -3,6 +3,7 @@ require "forwardable"
 module Nimo
   
   # Represent a game's screen, holding representations of domain objects for updates and draws.
+  # TODO: Add info on how to add 'quad', 'image' (whatever) methods
   # 
   class Screen
     extend Forwardable
@@ -15,6 +16,14 @@ module Nimo
       
       @representations = []
       @events = {}
+    end
+    
+    
+    
+    def self.register_representation(representation_name, representation_class)
+      define_method representation_name do |options, &blk|
+         add(representation_class, options).instance_eval &blk
+      end
     end
     
     # Add a representation to the screen. The options params is used to specify a GameObject and params. It returns the 

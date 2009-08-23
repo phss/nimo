@@ -66,7 +66,7 @@ module Nimo
     end
   
     def button_down(id)
-      @current_screen.button_down(id)
+      # @current_screen.button_down(id)
     end
     
   end

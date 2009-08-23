@@ -6,6 +6,19 @@ describe Nimo::GameWindow do
     @game_window = Nimo::GameWindow.new("Test", 640, 480)
   end
   
+  describe "(screen construction)" do
+    it "should add a new screen with the supplied screen building block" do
+      screen = mock("screen")
+      Nimo::Screen.should_receive(:new).and_return(screen)
+      screen.should_receive(:quad).with(:something)
+      screen.should_receive(:notify)
+      
+      @game_window.screen :name do
+        quad :something
+      end
+    end
+  end
+  
   describe "(screen transition)" do 
     before(:each) do
       @game_window.add_screens_by_class(FirstStubScreen, SecondStubScreen, ThirdStubScreen)

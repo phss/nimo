@@ -1,7 +1,7 @@
 module Nimo
   
   # Represents a game instance and provides access to the game screen and screen transition.
-  # It is an extension of the Gosu::Window, thus implementing the update, draw and button_down hooks.
+  # It is an extension of Gosu::Window, thus implementing the update, draw and button_down hooks.
   # 
   class GameWindow < Gosu::Window
     
@@ -17,13 +17,22 @@ module Nimo
       @global_resources = Nimo::Resources.new(self)
     end
     
+    # Register a new screen with the <tt>name</tt>, using the supplied block as the Screen constructor.
+    # 
+    def screen(name, &blk)
+      screen = Nimo::Screen.new(self, @global_resources)
+      screen.instance_eval(&blk) if block_given?
+      add_screen(name.to_s, screen)
+    end
+
+    # TODO remove this method when done with the refactoring.
+    def add_screens_by_class(*screen_classes) # :nodoc:
+      screen_classes.each { |screen_class| add_screen(screen_class.to_s.sub("Screen", ""), screen_class.new(self, @global_resources)) }
+    end
+    
     def add_screen(name, screen)
       @screens[name] = screen
       go_to(name) if @screens.size == 1
-    end
-    
-    def add_screens_by_class(*screen_classes)
-      screen_classes.each { |screen_class| add_screen(screen_class.to_s.sub("Screen", ""), screen_class.new(self, @global_resources)) }
     end
     
     # Switch to a Screen registered with the <tt>screen_name</tt>, notifying listeners of the :on_enter event. 

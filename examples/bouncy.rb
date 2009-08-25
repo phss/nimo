@@ -46,7 +46,7 @@ class GameScreen < Nimo::Screen
   object[:balls].each do |ball|
     quad :for => ball, :with => {:color => ball.color} do
       always { move }
-      listen_to(:color_change) { |representation, object| representation.color = ball.color }
+      listen_to(:color_change) { |representation, object| representation.color = object.color }
     end
   end
 

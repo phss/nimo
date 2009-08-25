@@ -18,8 +18,13 @@ module Nimo
       @events = {}
     end
     
-    
-    
+    # Register a representation to be called as a method.
+    # Example:
+    #   Screen.register_representation(:blah, Blah)
+    #   a_screen.blah :for => obj, :with => {:attr => 42} do
+    #     # Initialising representation
+    #   end
+    #     
     def self.register_representation(representation_name, representation_class)
       define_method representation_name do |options, &blk|
          add(representation_class, options).instance_eval &blk
@@ -62,7 +67,7 @@ module Nimo
       @events[event] = action
     end
     
-    # Execute registered action for notified event
+    # Execute registered action for notified event.
     # 
     def notify(event)
       @events[event].call if @events.has_key?(event)

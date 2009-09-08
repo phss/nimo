@@ -7,7 +7,7 @@ module Nimo
   # The position (:x and :y) and dimension (:width and :height) are used for visual representations and any 
   # useful game behavior. The state (:current_state) is mostly optional, being used for Nimo::SpriteRepresentation
   # to know what animation to draw. It can also be handy or complex behavior.
-  #
+  # 
   class GameObject
     attr_accessor :x, :y, :width, :height, :current_state
       

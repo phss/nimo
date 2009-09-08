@@ -3,6 +3,7 @@ module Nimo
   class QuadRepresentation < ObjectRepresentation
     attr_accessor :color
     
+    # FIXME: Fix this to have a method on ObjectRepresentation that registers.
     Screen.register_representation(:quad, self)
       
     def load(resources, params)

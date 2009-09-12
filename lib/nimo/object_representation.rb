@@ -18,7 +18,7 @@ module Nimo
       @listener_actions = {}
     end
 
-    # Hook to load data (i.e. images and fonts) from the game window. TODO not a great solution
+    # Hook to load data (i.e. images and fonts) from the game window. FIXME: not a great solution
     def load(resources, params)
     end
 
@@ -58,6 +58,14 @@ module Nimo
 
     def act_upon
       @game_object
+    end
+    
+    private
+
+    # Register itself as a object representation with the shortcut name.
+    # 
+    def self.represent(representation_name)
+      Screen.register_representation(representation_name, self)
     end
 
   end

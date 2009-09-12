@@ -16,17 +16,15 @@ module Nimo
     def load_images(image_definitions)
       image_definitions.each { |tag, definition| @images[tag] ||= create_image_from(definition) }
     end
-
-    def with_font(tag, font_type, size)
-      @fonts[tag] ||= Gosu::Font.new(@game_window,font_type, size)
-      self
-    end
-
-    def with_sound(tag, filename)
-      @sounds[tag] ||= Gosu::Song.new(@game_window, filename)
-      self
+    
+    def load_fonts(font_definitions)
+      font_definitions.each { |tag, definition| @fonts[tag] ||= Gosu::Font.new(@game_window, definition[:type], definition[:size]) }
     end
     
+    def load_sounds(sound_definitions)
+      sound_definitions.each { |tag, definition| @sounds[tag] ||= Gosu::Song.new(@game_window, definition[:filename]) }
+    end
+
     private
     
     def create_image_from(definition)

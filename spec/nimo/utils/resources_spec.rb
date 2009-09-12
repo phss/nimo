@@ -22,16 +22,20 @@ describe Nimo::Resources do
     @resources.images.should have_key(:some_tile)
   end
   
-  it "should build Resources as a builder" do
-    Gosu::Song.should_receive(:new).and_return(nil)
+  it "should load fonts" do
     Gosu::Font.should_receive(:new).and_return(nil)
     
-    resources = Nimo::Resources.new(nil).
-      with_sound(:some_sound, "some_file.png").
-      with_font(:some_font, "name", 12)
-      
-    resources.sounds.should have_key(:some_sound)
-    resources.fonts.should have_key(:some_font)
+    @resources.load_fonts(:some_font => { :type => "some_font_name", :size => 42 })
+    
+    @resources.fonts.should have_key(:some_font)
+  end
+  
+  it "should load sounds" do
+    Gosu::Song.should_receive(:new).and_return(nil)
+    
+    @resources.load_sounds(:some_sound => { :filename => "some_file.wav" })
+    
+    @resources.sounds.should have_key(:some_sound)
   end
   
 end

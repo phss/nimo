@@ -6,69 +6,10 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'nimo'
+include Gosu::Button
 
 WINDOW_WIDTH = 512
 WINDOW_HEIGHT = 480
-
-
-class StartScreen < Nimo::Screen
-  def load
-    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 200, :font => :main, :color => Gosu::white,
-      :text => "StartScreen: press any key to go to the GameScreen"})
-  end
-  
-  def button_down(id)
-    go_to(:Game)
-  end
-end
-
-
-class GameScreen < Nimo::Screen
-  def load
-    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 10, :font => :main, :color => Gosu::white,
-      :text => "GameScreen: press any key to open the MenuScreen"})
-    
-    balls = (0..19).collect { Ball.new(Wall.sections) }
-    balls.each do |ball|
-      ball.with_deflectors(balls.find_all { |other_ball| other_ball != ball })
-      add(Nimo::QuadRepresentation, :for => ball, :with => {:color => Gosu::red}).always { move }
-    end
-  end
-  
-  def button_down(id)
-     open_menu(:Menu)
-  end
-end
-
-
-class MenuScreen < Nimo::Screen
-  def load
-    add(Nimo::TextRepresentation, :with => {:x => 100, :y => 200, :font => :main, :color => Gosu::white, :size => 15,
-      :text => "MenuScreen:"})
-    add(Nimo::TextRepresentation, :with => {:x => 100, :y => 215, :font => :main, :color => Gosu::white, :size => 15,
-      :text => "- <ESC> to go to the EndScreen"})
-    add(Nimo::TextRepresentation, :with => {:x => 100, :y => 230, :font => :main, :color => Gosu::white, :size => 15,
-      :text => "- <ENTER> to go to the GameScreen"})
-  end
-  
-  def button_down(id)
-    close_menu if id == Gosu::Button::KbReturn
-    close_menu and go_to(:End) if id == Gosu::Button::KbEscape
-  end
-end
-
-
-class EndScreen < Nimo::Screen
-  def load
-    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 200, :font => :main, :color => Gosu::white,
-      :text => "EndScreen: you've reached the end of this example!"})
-  end
-  
-  def button_down(id)
-    exit
-  end
-end
-
 
 class Wall < Nimo::GameObject
   include Nimo::Behavior::Deflector
@@ -97,8 +38,43 @@ class Ball < Nimo::GameObject
 end
 
 if __FILE__ == $PROGRAM_NAME
-  window = Nimo::GameWindow.new("Screeny", WINDOW_WIDTH, WINDOW_HEIGHT)
-  window.global_resources.with_font(:main, "Helvetica", 20)
-  window.add_screens_by_class(StartScreen, GameScreen, MenuScreen, EndScreen)
-  window.show
+  Nimo::Game("Screeny", WINDOW_WIDTH, WINDOW_HEIGHT) do
+    fonts :main => { :type => "Helvetica", :size => 20 }
+    
+    screen :start do
+      text :with => {:text => "StartScreen: press any key to go to the GameScreen", 
+                     :x => 10, :y => 200, :font => :main, :color => Gosu::white}
+      any_key { go_to :game }
+    end
+    
+    screen :game do
+      text :with => {:text => "GameScreen: press any key to open the MenuScreen",
+                     :x => 10, :y => 10, :font => :main, :color => Gosu::white}
+
+      balls = (0..19).collect { Ball.new(Wall.sections) }
+      balls.each do |ball|
+        ball.with_deflectors(balls.find_all { |other_ball| other_ball != ball })
+        quad :for => ball, :with => {:color => Gosu::red} do
+          always { move }
+        end
+      end
+      
+      any_key { open_menu :menu }
+    end
+    
+    screen :menu do
+      text :with => {:text => "MenuScreen:", :x => 100, :y => 200, :font => :main, :color => Gosu::white, :size => 15}
+      text :with => {:text => "- <ESC> to go to the EndScreen", :x => 100, :y => 215, :font => :main, :color => Gosu::white, :size => 15}
+      text :with => {:text => "- <ENTER> to go to the GameScreen", :x => 100, :y => 230, :font => :main, :color => Gosu::white, :size => 15}
+      
+      when_key(KbReturn) { close_menu }
+      when_key(KbEscape) { close_menu and go_to :end }
+    end
+    
+    screen :end do
+      text :with => {:text => "EndScreen: you've reached the end of this example!",
+                     :x => 10, :y => 200, :font => :main, :color => Gosu::white}
+      any_key { exit }
+    end
+  end
 end

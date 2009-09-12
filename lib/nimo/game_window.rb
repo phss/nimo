@@ -24,13 +24,29 @@ module Nimo
       add_screen(name.to_s, screen)
     end
 
-    # Load images that can be referenced by the tag.
-    # Examples:
-    #   image :some_tag => { :filename => "path_to_image.png" } # Load path_to_image.png to be used by the tag :some_tag
-    #   image :tile_tag => { :filename => "path_to_tile.png", :tile_dimension => [32, 50] } # Load path_to_tile.png as a tile of width 32 and height 50
+    # Load images that can be referenced by a tag.
+    # Example of <tt>image_definitions</tt>:
+    #   images :some_tag => { :filename => "path_to_image.png" } # Load path_to_image.png to be used by the tag :some_tag
+    #   images :tile_tag => { :filename => "path_to_tile.png", :tile_dimension => [32, 50] } # Load path_to_tile.png as a tile of width 32 and height 50
     # 
     def images(image_definitions)
       @global_resources.load_images(image_definitions)
+    end
+    
+    # Load fonts that can be referenced by a tag.
+    # Example of <tt>font_definitions</tt>:
+    #   fonts :some_tag => { :type => "font_type", :size => 20 } # Load font of type 'font_type'
+    #
+    def fonts(font_definitions)
+      @global_resources.load_fonts(font_definitions)
+    end
+    
+    # Load sounds that can be referenced by a tag.
+    # Example of <tt>sound_definitions</tt>:
+    #   sounds :some_tag => { :filename => "some_file.wav", :size => 20 }
+    #
+    def sounds(sound_definitions)
+      @global_resources.load_sounds(sound_definitions)
     end
 
     # FIXME remove this method when done with the refactoring.

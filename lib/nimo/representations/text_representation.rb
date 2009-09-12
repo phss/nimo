@@ -1,6 +1,7 @@
 module Nimo
   
   class TextRepresentation < ObjectRepresentation
+    represent :text
     attr_accessor :color
     
     def load(resources, params)

@@ -1,6 +1,7 @@
 module Nimo
   
   class ImageRepresentation < ObjectRepresentation
+    represent :image
   
     def load(resources, params)
       @image = resources.images[params[:image]]

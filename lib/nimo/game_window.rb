@@ -5,8 +5,7 @@ module Nimo
   # 
   class GameWindow < Gosu::Window
     
-    attr_reader :current_screen
-    attr_accessor :global_resources
+    attr_reader :current_screen, :global_resources
     
     def initialize(name, width, height)
       super(width, height, false)
@@ -25,7 +24,16 @@ module Nimo
       add_screen(name.to_s, screen)
     end
 
-    # TODO remove this method when done with the refactoring.
+    # Load images that can be referenced by the tag.
+    # Examples:
+    #   image :some_tag => { :filename => "path_to_image.png" } # Load path_to_image.png to be used by the tag :some_tag
+    #   image :tile_tag => { :filename => "path_to_tile.png", :tile_dimension => [32, 50] } # Load path_to_tile.png as a tile of width 32 and height 50
+    # 
+    def images(image_definitions)
+      @global_resources.load_images(image_definitions)
+    end
+
+    # FIXME remove this method when done with the refactoring.
     def add_screens_by_class(*screen_classes) # :nodoc:
       screen_classes.each { |screen_class| add_screen(screen_class.to_s.sub("Screen", ""), screen_class.new(self, @global_resources)) }
     end
@@ -66,7 +74,7 @@ module Nimo
     end
   
     def button_down(id)
-      # @current_screen.button_down(id)
+      @current_screen.button_down(id)
     end
     
   end

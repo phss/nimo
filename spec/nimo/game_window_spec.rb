@@ -3,6 +3,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Nimo::GameWindow do
   
   before(:each) do
+    @resources = mock("resources")
+    Nimo::Resources.should_receive(:new).and_return(@resources)
     @game_window = Nimo::GameWindow.new("Test", 640, 480)
   end
   
@@ -16,6 +18,13 @@ describe Nimo::GameWindow do
       @game_window.screen :name do
         quad :something
       end
+    end
+    
+    it "should forward image loading to the Resources" do
+      image_def = {:some_tag => { :filename => "some file name.png" }}
+      @resources.should_receive(:load_images).with(image_def)
+      
+      @game_window.images(image_def)
     end
   end
   

@@ -14,6 +14,18 @@ module Nimo
       self
     end
     
+    # Register an action to be executed everytime a key is pressed.
+    # 
+    def any_key(&action)
+      @any_key_action = action
+    end
+    
+    # Gosu hook invoked anytime a button is pressed
+    # 
+    def button_down(id) #:nodoc:
+       act_upon.instance_eval(&@any_key_action) unless @any_key_action.nil?
+    end
+    
     def process_inputs
       key_actions.each do |key, key_action|
         act_upon.instance_eval(&key_action.action) if key_action.should_execute?(@game_window.button_down?(key))

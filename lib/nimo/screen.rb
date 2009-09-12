@@ -28,7 +28,8 @@ module Nimo
     #     
     def self.register_representation(representation_name, representation_class)
       define_method representation_name do |options, &blk|
-         add(representation_class, options).instance_eval &blk
+         representation = add(representation_class, options)
+         representation.instance_eval &blk if blk
       end
     end
     

@@ -8,42 +8,11 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'nimo'
+include Gosu::Button
 
 WINDOW_WIDTH = 512
 WINDOW_HEIGHT = 480
 WINDOW = {:x => 0, :y => 0, :width => WINDOW_WIDTH, :height => WINDOW_HEIGHT}
-
-class TitleScreen < Nimo::Screen
-  
-  def load
-    add(Nimo::QuadRepresentation, :with => WINDOW.merge(:color => Gosu::white))
-    add(Nimo::ImageRepresentation, :with => {:x => 116, :y => 190, :image => :jeeklabs})
-  end
-  
-  def button_down(id)
-    go_to(:Game)
-  end
-  
-end
-
-class GameScreen < Nimo::Screen
-  
-  def load
-    # Dungeon.representation.each { |block| add(block) }
-    Dungeon.representation.each { |params| add( Nimo::ImageRepresentation, :with => params) }
-    
-    add(Nimo::ImageRepresentation, :for => Player.new, :with => {:image => :char_tiles, :index => 85}).    
-      when_key(Gosu::Button::KbLeft, :repeatable => false) { move_left }.
-      when_key(Gosu::Button::KbRight, :repeatable => false) { move_right }.
-      when_key(Gosu::Button::KbUp, :repeatable => false) { move_up }.
-      when_key(Gosu::Button::KbDown, :repeatable => false) { move_down }
-  end
-  
-  def button_down(id)
-    exit if id == Gosu::Button::KbEscape
-  end
-  
-end
 
 class Player < Nimo::GameObject
   include Nimo::Behavior::Moveable
@@ -83,12 +52,31 @@ end
 
 
 if __FILE__ == $PROGRAM_NAME
-  window = Nimo::GameWindow.new("Imagey", WINDOW_WIDTH, WINDOW_HEIGHT)
-  window.global_resources.
-    with_image(:jeeklabs, "examples/images/jeeklabs.png").
-    with_image_tiles(:char_tiles, "examples/images/dg_classm32.png", 32, 32).
-    with_image_tiles(:map_tiles, "examples/images/dg_dungeon32.png", 32, 32)
+  Nimo::Game("Imagey", WINDOW_WIDTH, WINDOW_HEIGHT) do
+    images :jeeklabs => { :filename => "examples/images/jeeklabs.png" },
+           :char_tiles => { :filename => "examples/images/dg_classm32.png", :tile_dimension => [32, 32] },
+           :map_tiles => { :filename => "examples/images/dg_dungeon32.png", :tile_dimension => [32, 32] }
     
-  window.add_screens_by_class(TitleScreen, GameScreen)
-  window.show
+    screen :title do
+      quad :with => WINDOW.merge(:color => Gosu::white)
+      image :with => {:x => 116, :y => 190, :image => :jeeklabs}
+      
+      any_key { go_to :game }
+    end
+    
+    screen :game do
+      Dungeon.representation.each { |params| image :with => params }
+
+      image :for => Player.new, :with => {:image => :char_tiles, :index => 85} do
+        when_key(KbLeft, :repeatable => false) { self.move_left }
+        when_key(KbRight, :repeatable => false) { self.move_right }
+        when_key(KbUp, :repeatable => false) { move_up }
+        when_key(KbDown, :repeatable => false) { move_down }
+      end
+        
+      when_key(KbEscape) { exit }
+    end
+    
+  end
+  
 end

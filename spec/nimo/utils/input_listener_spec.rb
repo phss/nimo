@@ -54,6 +54,18 @@ describe "Nimo::InputListener module" do
     end
   end
   
+  describe "(any key actions)" do
+    it "should execute the 'any key' action when any button is pressed" do
+      was_called = false
+      actionable = SomeActionable.new(nil)
+      actionable.any_key { was_called = true }
+
+      actionable.button_down(nil)
+      
+      was_called.should be_true
+    end
+  end
+  
   describe "(acting upon an external object)" do
     it "should act upon an external object" do
       external = Struct.new(:count).new

@@ -1,7 +1,6 @@
 module Nimo
   
-  # 
-  # Builder to create a Resource.
+  # Resource loader.
   # 
   class Resources
 
@@ -13,15 +12,9 @@ module Nimo
       @fonts  = {}
       @sounds = {}
     end
-  
-    def with_image(tag, filename)
-      @images[tag] ||= Gosu::Image.new(@game_window, filename, 0)
-      self
-    end
-  
-    def with_image_tiles(tag, filename, tile_width, tile_height)
-      @images[tag] ||= Gosu::Image.load_tiles(@game_window, filename, tile_width, tile_height, false)
-      self
+    
+    def load_images(image_definitions)
+      image_definitions.each { |tag, definition| @images[tag] ||= create_image_from(definition) }
     end
 
     def with_font(tag, font_type, size)
@@ -33,5 +26,17 @@ module Nimo
       @sounds[tag] ||= Gosu::Song.new(@game_window, filename)
       self
     end
+    
+    private
+    
+    def create_image_from(definition)
+      if definition.has_key?(:tile_dimension)
+        width = definition[:tile_dimension][0]
+        height = definition[:tile_dimension][1]
+        return Gosu::Image.load_tiles(@game_window, definition[:filename], width, height, false)
+      end
+      return Gosu::Image.new(@game_window, definition[:filename], 0)
+    end
+    
   end
 end

@@ -15,7 +15,7 @@ require NIMO_DIR + "/utils/object_extension"
 require NIMO_DIR + "/utils/intersection"
 require NIMO_DIR + "/utils/resources"
 require NIMO_DIR + "/utils/game"
-require NIMO_DIR + "/utils/actionable"
+require NIMO_DIR + "/utils/input_listener"
 
 require NIMO_DIR + "/game_object"
 require NIMO_DIR + "/game_window"

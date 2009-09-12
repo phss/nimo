@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-describe "Nimo::Actionable module" do
+describe "Nimo::InputListener module" do
   
   class SomeActionable
-    include Nimo::Actionable
+    include Nimo::InputListener
     attr_reader :num_of_updates
     
     def initialize(game_window, acting_upon = self)
@@ -20,28 +20,28 @@ describe "Nimo::Actionable module" do
   describe "(key actions)" do
     it "should not execute key event when key was not pressed" do
       actionable = new_actionable(false)
-      actionable.update
+      actionable.process_inputs
     
       actionable.num_of_updates.should == 0
     end
   
     it "should execute key event when key is pressed" do
       actionable = new_actionable(true)
-      actionable.update
+      actionable.process_inputs
     
       actionable.num_of_updates.should == 1
     end
     
     it "should execute key event multiple times when it is repeatable" do
       actionable = new_actionable(true)
-      2.times { actionable.update }
+      2.times { actionable.process_inputs }
     
       actionable.num_of_updates.should == 2
     end
     
     it "should execute non repeatable key event once before clearing the button" do
       actionable = new_actionable(true, :repeatable => false)
-      2.times { actionable.update }
+      2.times { actionable.process_inputs }
     
       actionable.num_of_updates.should == 1
     end
@@ -64,7 +64,7 @@ describe "Nimo::Actionable module" do
       actionable = SomeActionable.new(mock_window, external)
       actionable.when_key(Gosu::Button::KbLeft, options) { self.count += 1 }
       
-      actionable.update
+      actionable.process_inputs
     
       external.count.should == 1
     end

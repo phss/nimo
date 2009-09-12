@@ -1,23 +1,29 @@
 module Nimo
   
-  # FIXME: finish it and rethink name
-  module Actionable
+  # Listen for inputs (key presses) and execute the corresponding actions on update.
+  # 
+  module InputListener
     
     # Register an action that will execute when the key is pressed.
     # An options hash can be specified to customise the behavior. The options are:
     # - <tt>:repeatable</tt> (defaults to true) - execute the action every update regardless if the key was already pressed in the previous update.
+    # 
     def when_key(key, options = {}, &action)
       key = @game_window.char_to_button_id(key) if key.class == String
       key_actions[key] = KeyAction.new(action, options)
       self
     end
     
-    def update
+    def process_inputs
       key_actions.each do |key, key_action|
         act_upon.instance_eval(&key_action.action) if key_action.should_execute?(@game_window.button_down?(key))
       end
     end
     
+    protected
+    
+    # Defines the object to be the context of the action. By default it is <tt>self</tt>.
+    # 
     def act_upon
       self
     end

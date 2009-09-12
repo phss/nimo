@@ -4,7 +4,7 @@ module Nimo
   # Nimo::GameObject's view. It holds actions to be executed on every update or when a key is pressed.
   # 
   class ObjectRepresentation
-    include Actionable
+    include InputListener
     
     attr_reader :game_object
     attr_accessor :game_window
@@ -48,12 +48,16 @@ module Nimo
 
     def update
       @always_actions.each { |action| @game_object.instance_eval(&action) }
-      super
+      process_inputs
 			@observer.call(self, game_object) unless @observer.nil?
     end
 
     # Should be overriden by childs
     def draw
+    end
+
+    def act_upon
+      @game_object
     end
 
   end

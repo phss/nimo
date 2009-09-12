@@ -6,6 +6,7 @@ module Nimo
   # TODO: Add info on how to add 'quad', 'image' (whatever) methods
   # 
   class Screen
+    include InputListener
     extend Forwardable
     
     def_delegators :@game_window, :go_to, :open_menu, :close_menu
@@ -51,6 +52,7 @@ module Nimo
     # Updates all representations.
     # 
     def update
+      process_inputs
       @representations.each { |representation| representation.update }
     end
   

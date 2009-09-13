@@ -17,8 +17,7 @@ Nimo::Game("Soundy", WINDOW_WIDTH, WINDOW_HEIGHT) do
   fonts :main => { :type => "Helvetica", :size => 15}
   
   screen :main do
-    # FIXME: refactor event listening
-    self.when(:on_enter) { @resources.sounds[:startup].play(true) }
+    listen_to(:on_enter) { sounds[:startup].play(true) }
 
     text :with => {:x => 10, :y => 10, :font => :main, :color => Gosu::white,
                    :text => "This screen will play a background sound."}
@@ -26,11 +25,7 @@ Nimo::Game("Soundy", WINDOW_WIDTH, WINDOW_HEIGHT) do
                    :text => "Press <esc> to quit or <enter> to go to the next screen."}
     
     when_key(Gosu::Button::KbEscape) { exit }
-    when_key(Gosu::Button::KbReturn) do
-      # FIXME: rethink how to use resources
-      @resources.sounds[:startup].stop
-      go_to :another
-    end
+    when_key(Gosu::Button::KbReturn) { sounds[:startup].stop and go_to :another }
   end
   
   screen :another do

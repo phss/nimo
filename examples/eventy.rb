@@ -7,30 +7,13 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'nimo'
 
-WINDOW_WIDTH = 512
-WINDOW_HEIGHT = 480
+TEN_SECONDS = 10*60*1000 # ???
 
-class MainScreen < Nimo::Screen
-  
-  def load
-    @timer = Timer.new
-    add(Nimo::TextRepresentation.at(:x => 10, :y => 200, :color => Gosu::white,
-      :text => "Will exit in a few seconds"))
+Nimo::Game("Eventy", 512, 480) do
+  screen :main do
+    text :with => { :text => "Will exit in a few seconds", :x => 10, :y => 200, :color => Gosu::white }
+    
+    listen_to(:on_enter) { timer_for(TEN_SECONDS) { exit } }
+    any_key { exit }
   end
-  
-  def on_enter
-    @timer.start
-  end
-  
-  def button_down(id)
-    exit
-  end
-  
-end
-
-
-if __FILE__ == $PROGRAM_NAME
-  window = Nimo::GameWindow.new("Soundy", WINDOW_WIDTH, WINDOW_HEIGHT)
-  window.add_screens_by_class(MainScreen)
-  window.show
 end

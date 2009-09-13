@@ -11,51 +11,33 @@ require 'nimo'
 WINDOW_WIDTH = 512
 WINDOW_HEIGHT = 480
 
-class MainScreen < Nimo::Screen
+Nimo::Game("Soundy", WINDOW_WIDTH, WINDOW_HEIGHT) do
+  sounds :startup => { :filename => "examples/sounds/KDE-Sys-Log-Out.ogg" },
+         :effect => { :filename => "examples/sounds/k3b_error1.wav" }
+  fonts :main => { :type => "Helvetica", :size => 15}
   
-  def load    
+  screen :main do
     self.when(:on_enter) { @resources.sounds[:startup].play(true) }
+
+    text :with => {:x => 10, :y => 10, :font => :main, :color => Gosu::white,
+                   :text => "This screen will play a background sound."}
+    text :with => {:x => 10, :y => 28, :font => :main, :color => Gosu::white,
+                  :text => "Press <esc> to quit or <enter> to go to the next screen."}
     
-    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 10, :font => :main, :color => Gosu::white,
-      :text => "This screen will play a background sound."})
-    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 28, :font => :main, :color => Gosu::white,
-      :text => "Press <esc> to quit or any other key to go to the next screen."})      
-  end
-  
-  def button_down(id)
-    if id == Gosu::Button::KbEscape
-      exit 
-    else
+    when_key(Gosu::Button::KbEscape) { exit }
+    when_key(Gosu::Button::KbReturn) do
       @resources.sounds[:startup].stop
-      go_to(:Another)
+      go_to :another
     end
   end
   
-end
+  screen :another do
+    text :with => {:x => 10, :y => 10, :font => :main, :color => Gosu::white,
+                   :text => "This screen will play a sound effect."}
+    text :with => {:x => 10, :y => 28, :font => :main, :color => Gosu::white,
+                   :text => "Press <esc> to go back or <enter> to play the sound."}
 
-class AnotherScreen < Nimo::Screen
-  
-  def load
-    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 10, :font => :main, :color => Gosu::white,
-      :text => "This screen will play a sound effect."})
-    add(Nimo::TextRepresentation, :with => {:x => 10, :y => 28, :font => :main, :color => Gosu::white,
-      :text => "Press <esc> to go back or any other key to play the sound."})
+    when_key(Gosu::Button::KbEscape) { go_to :main }
+    when_key(Gosu::Button::KbReturn) { @resources.sounds[:effect].play }
   end
-  
-  def button_down(id)
-    go_to(:Main) if id == Gosu::Button::KbEscape
-    @resources.sounds[:effect].play
-  end
-  
-end
-
-
-if __FILE__ == $PROGRAM_NAME
-  window = Nimo::GameWindow.new("Soundy", WINDOW_WIDTH, WINDOW_HEIGHT)
-  window.global_resources.
-    with_sound(:startup, "examples/sounds/KDE-Sys-Log-Out.ogg").
-    with_sound(:effect, "examples/sounds/k3b_error1.wav").    
-    with_font(:main, "Helvetica", 15)
-  window.add_screens_by_class(MainScreen, AnotherScreen)
-  window.show
 end

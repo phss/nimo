@@ -30,35 +30,37 @@ describe Nimo::GameWindow do
   
   describe "(screen transition)" do 
     before(:each) do
-      @game_window.add_screens_by_class(FirstStubScreen, SecondStubScreen, ThirdStubScreen)
+      @game_window.screen :first
+      @game_window.screen :second
+      @game_window.screen :third
     end
      
     it "should have the first screen added as the current screen" do
-      @game_window.current_screen.should be_an_instance_of(FirstStubScreen)
+      @game_window.current_screen.id.should == :first
     end
   
     it "should cycle through available screens" do
-      @game_window.go_to("SecondStub")
-      @game_window.current_screen.should be_an_instance_of(SecondStubScreen)
-      @game_window.go_to("ThirdStub")
-      @game_window.current_screen.should be_an_instance_of(ThirdStubScreen)
-      @game_window.go_to("FirstStub")
-      @game_window.current_screen.should be_an_instance_of(FirstStubScreen)
+      @game_window.go_to(:second)
+      @game_window.current_screen.id.should == :second
+      @game_window.go_to(:third)
+      @game_window.current_screen.id.should == :third
+      @game_window.go_to(:first)
+      @game_window.current_screen.id.should == :first
     end
   
     it "should open and close a 'menu' screen" do
-      @game_window.open_menu("SecondStub")
-      @game_window.current_screen.should be_an_instance_of(SecondStubScreen)
-      @game_window.open_menu("ThirdStub")
-      @game_window.current_screen.should be_an_instance_of(ThirdStubScreen)
+      @game_window.open_menu(:second)
+      @game_window.current_screen.id.should == :second
+      @game_window.open_menu(:third)
+      @game_window.current_screen.id.should == :third
       @game_window.close_menu
-      @game_window.current_screen.should be_an_instance_of(SecondStubScreen)
+      @game_window.current_screen.id.should == :second
       @game_window.close_menu
-      @game_window.current_screen.should be_an_instance_of(FirstStubScreen)
+      @game_window.current_screen.id.should == :first
     end
     
     it "should throw error if screen is not available" do
-      lambda { @game_window.go_to("WrongScreen") }.should raise_error("There is no screen named WrongScreen")
+      lambda { @game_window.go_to(:wrong_screen) }.should raise_error("There is no screen named wrong_screen")
     end
   
   end
@@ -111,7 +113,3 @@ describe Nimo::GameWindow do
   end
   
 end
-
-class FirstStubScreen < Nimo::Screen; end
-class SecondStubScreen < Nimo::Screen; end
-class ThirdStubScreen < Nimo::Screen; end

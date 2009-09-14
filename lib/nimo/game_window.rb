@@ -18,10 +18,10 @@ module Nimo
     
     # Register a new screen with the <tt>name</tt>, using the supplied block as the Screen constructor.
     # 
-    def screen(name, &blk)
-      screen = Nimo::Screen.new(self, @global_resources)
+    def screen(screen_id, &blk)
+      screen = Nimo::Screen.new(screen_id, self, @global_resources)
       screen.instance_eval(&blk) if block_given?
-      add_screen(name.to_s, screen)
+      add_screen(screen_id.to_s, screen)
     end
 
     # Load images that can be referenced by a tag.
@@ -47,11 +47,6 @@ module Nimo
     #
     def sounds(sound_definitions)
       @global_resources.load_sounds(sound_definitions)
-    end
-
-    # FIXME remove this method when done with the refactoring.
-    def add_screens_by_class(*screen_classes) # :nodoc:
-      screen_classes.each { |screen_class| add_screen(screen_class.to_s.sub("Screen", ""), screen_class.new(self, @global_resources)) }
     end
     
     def add_screen(name, screen)

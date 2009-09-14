@@ -5,7 +5,7 @@ describe Nimo::Screen do
   it "should register and execute event" do
     event_called = false
     
-    screen = Nimo::Screen.new(nil, nil)
+    screen = Nimo::Screen.new(:id, nil, nil)
     screen.listen_to(:on_enter) { event_called = true }
     
     event_called.should == false
@@ -14,7 +14,7 @@ describe Nimo::Screen do
   end
   
   it "should register new representation" do
-    screen = Nimo::Screen.new(nil, nil)
+    screen = Nimo::Screen.new(:id, nil, nil)
     screen.respond_to?(:new_representation).should be_false
 
     Nimo::Screen.register_representation(:new_representation, nil)
@@ -27,7 +27,7 @@ describe Nimo::Screen do
       @representation_class = mock("representation class")
       @representation = mock("representation")
       @representation_class.should_receive(:new).and_return(@representation)
-      @screen = Nimo::Screen.new(nil, nil)
+      @screen = Nimo::Screen.new(:id, nil, nil)
     end
     
     it "should load representation using the :with params" do
@@ -54,7 +54,7 @@ describe Nimo::Screen do
         mock_window = mock("window")
         mock_window.should_receive(method_name)
 
-        Nimo::Screen.new(mock_window, nil).send(method_name)
+        Nimo::Screen.new(:id, mock_window, nil).send(method_name)
       end
     end
   end
@@ -65,7 +65,7 @@ describe Nimo::Screen do
         resources = mock("resources")
         resources.should_receive(method_name)
 
-        Nimo::Screen.new(nil, resources).send(method_name)
+        Nimo::Screen.new(:id, nil, resources).send(method_name)
       end
     end
   end

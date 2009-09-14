@@ -6,7 +6,7 @@ describe Nimo::Screen do
     event_called = false
     
     screen = Nimo::Screen.new(nil, nil)
-    screen.when(:on_enter) { event_called = true }
+    screen.listen_to(:on_enter) { event_called = true }
     
     event_called.should == false
     screen.notify(:on_enter)

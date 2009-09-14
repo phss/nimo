@@ -66,7 +66,7 @@ module Nimo
     # Register an action to be executed when an event is notified. The Nimo events are: 
     # - <tt>:on_enter</tt> when a screen is 'entered'. TODO need to think of a better term.
     # 
-    def when(event, &action)
+    def listen_to(event, &action)
       @events[event] = action
     end
     

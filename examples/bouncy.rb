@@ -80,7 +80,7 @@ if __FILE__ == $PROGRAM_NAME
       balls.each do |ball|
         quad :for => ball, :with => {:color => ball.color} do
           always { move }
-          listen_to(:color_change) { |representation, object| representation.color = object.color }
+          listen_to(:color_change) { self.color = game_object.color }
         end
       end
 

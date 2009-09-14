@@ -6,7 +6,7 @@ module Nimo
   # TODO: Add info on how to add 'quad', 'image' (whatever) methods
   # 
   class Screen
-    include InputListener
+    include InputListener, EventListener
     extend Forwardable
     
     def_delegators :@game_window, :go_to, :open_menu, :close_menu
@@ -61,19 +61,6 @@ module Nimo
     # 
     def draw
       @representations.each { |representation| representation.draw }
-    end
-    
-    # Register an action to be executed when an event is notified. The Nimo events are: 
-    # - <tt>:on_enter</tt> when a screen is 'entered'. TODO need to think of a better term.
-    # 
-    def listen_to(event, &action)
-      @events[event] = action
-    end
-    
-    # Execute registered action for notified event.
-    # 
-    def notify(event)
-      @events[event].call if @events.has_key?(event)
     end
   
   end

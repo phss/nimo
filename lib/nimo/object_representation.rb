@@ -4,7 +4,7 @@ module Nimo
   # Nimo::GameObject's view. It holds actions to be executed on every update or when a key is pressed.
   # 
   class ObjectRepresentation
-    include InputListener
+    include InputListener, EventListener
     
     attr_reader :game_object
     attr_accessor :game_window
@@ -14,8 +14,6 @@ module Nimo
       @game_object = game_object
       
       @always_actions = []
-      @key_actions = {}
-      @listener_actions = {}
     end
 
     # Hook to load data (i.e. images and fonts) from the game window. FIXME: not a great solution
@@ -28,15 +26,12 @@ module Nimo
       self
     end
     
-    # Register an action that will execute when the game object sends a notification.
+    # Register an action that will execute when the game object sends a notification. Overrides EventListener to 
+    # add default registration to game_object.
+    # 
     def listen_to(event_type, &action)
-      @listener_actions[event_type] = action
+      super
       game_object.register_listener(event_type, self)
-      self
-    end
-    
-    def notify(event_type)
-      @listener_actions[event_type].call(self, game_object) if @listener_actions.has_key? event_type
     end
 
 		# Register an observer to be invoked every update, after all actions runned. This could be useful when a more complex behavior

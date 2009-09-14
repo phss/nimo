@@ -59,4 +59,15 @@ describe Nimo::Screen do
     end
   end
   
+  describe "(forwarding resource usage methods to resources)" do
+    [:sounds, :images, :fonts].each do |method_name|
+      it "should forward #{method_name} method to game_window" do
+        resources = mock("resources")
+        resources.should_receive(method_name)
+
+        Nimo::Screen.new(nil, resources).send(method_name)
+      end
+    end
+  end
+  
 end

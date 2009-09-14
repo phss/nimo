@@ -38,7 +38,6 @@ module Nimo
 		# is required from the representation, and there is a need to inspect the game object to change some state.
 		def with_observer(&observer)
 			@observer = observer
-			self
 		end
 
     def update

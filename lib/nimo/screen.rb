@@ -10,6 +10,7 @@ module Nimo
     extend Forwardable
     
     def_delegators :@game_window, :go_to, :open_menu, :close_menu
+    def_delegators :@resources, :images, :sounds,  :fonts
     
     def initialize(game_window, resources)
       @game_window = game_window

@@ -1,7 +1,7 @@
 module Nimo
   
   class SpriteRepresentation < ObjectRepresentation
-    represent :sprite_tiles  
+    represent :sprite
     attr_accessor :flip
     
     def initialize(game_window, game_object)

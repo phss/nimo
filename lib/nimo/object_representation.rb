@@ -1,6 +1,5 @@
 module Nimo
   
-  # 
   # Nimo::GameObject's view. It holds actions to be executed on every update or when a key is pressed.
   # 
   class ObjectRepresentation
@@ -10,9 +9,7 @@ module Nimo
     attr_accessor :game_window
 
     def initialize(game_window, game_object)
-      @game_window = game_window
-      @game_object = game_object
-      
+      @game_window, @game_object = game_window, game_object
       @always_actions = []
     end
 
@@ -36,6 +33,7 @@ module Nimo
 
 		# Register an observer to be invoked every update, after all actions runned. This could be useful when a more complex behavior
 		# is required from the representation, and there is a need to inspect the game object to change some state.
+    # 
 		def with_observer(&observer)
 			@observer = observer
 		end
@@ -46,7 +44,7 @@ module Nimo
 			@observer.call(self, game_object) unless @observer.nil?
     end
 
-    # Should be overriden by childs
+    # Should be overriden by childs. FIXME: throw an exception?
     def draw
     end
 

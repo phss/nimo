@@ -5,11 +5,10 @@ module Nimo
   # a game entity should extend this class.
   # 
   # The position (:x and :y) and dimension (:width and :height) are used for visual representations and any 
-  # useful game behavior. The state (:current_state) is mostly optional, being used for Nimo::SpriteRepresentation
-  # to know what animation to draw. It can also be handy or complex behavior.
+  # useful game behavior.
   # 
   class GameObject
-    attr_accessor :x, :y, :width, :height, :current_state
+    attr_accessor :x, :y, :width, :height
       
     def initialize(config_options = {})
       configure_with({:x => 0, :y => 0, :width => 0, :height => 0}.merge(config_options))
@@ -37,6 +36,7 @@ module Nimo
         obj.y > (@y + @height) || @y > (obj.y + obj.height))
     end
     
+    # FIXME: move this, ant the previous method, to a different object/module.
     def intersection(obj)
       collide?(obj) ? Intersection.between(self, obj) : nil
     end
@@ -52,10 +52,6 @@ module Nimo
     
     def notify(event_type)
       @listeners[event_type].each { |listener| listener.notify(event_type) } if @listeners.has_key? event_type
-    end
-
-    def change_to(state)
-      @current_state = @current_state.is_a?(Hash) ? @current_state.merge(state) : state
     end
     
   end

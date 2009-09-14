@@ -4,6 +4,7 @@ module Nimo
     represent :text
     attr_accessor :color
     
+    # FIXME: create a definition requirement...or something...to validate when we don't have a font
     def load(resources, params)
       @font = resources.fonts[params[:font]]
       @color = params[:color]

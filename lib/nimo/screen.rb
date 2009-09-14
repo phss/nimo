@@ -12,7 +12,7 @@ module Nimo
     attr_reader :id
     
     def_delegators :@game_window, :go_to, :open_menu, :close_menu
-    def_delegators :@resources, :images, :sounds,  :fonts
+    def_delegators :@resources, :images, :sounds, :fonts
     
     def initialize(id, game_window, resources)
       @id, @game_window, @resources = id, game_window, resources

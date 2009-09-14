@@ -166,30 +166,5 @@ describe Nimo::GameObject do
     end
     
   end
-  
-  describe "(state)" do
-    it "should have no inital current state if not specified" do
-      Nimo::GameObject.new.current_state.should be_nil
-    end
-  
-    it "should have specified initial current state" do
-      Nimo::GameObject.new(:current_state => :some_state).current_state.should == :some_state
-    end
-
-    it "should change and notify composite state" do
-      obj = Nimo::GameObject.new
-      obj.change_to(:s2 => :another_state, :s1 => :some_state)
-
-      obj.current_state.should == { :s1 => :some_state, :s2 => :another_state }
-    end
-  
-    it "should change and notify element of the composite state" do
-      obj = Nimo::GameObject.new(:current_state => {:s1 => :some_state, :s2 => :previous_state})
-      obj.change_to(:s2 => :another_state)
-    
-      obj.current_state.should == { :s1 => :some_state, :s2 => :another_state }
-    end
-
-  end
     
 end

@@ -69,11 +69,8 @@ describe Nimo::GameWindow do
     it "should proxy updates and draws to current screen" do
       mock_screen = new_mock_screen("screen")
 
-      mock_screen.should_receive(:update).once
-      @game_window.update
-
-      mock_screen.should_receive(:draw).once
-      @game_window.draw
+      expect(:update, mock_screen)
+      expect(:draw, mock_screen)
     end
     
     it "should proxy draws to background screens" do
@@ -82,12 +79,8 @@ describe Nimo::GameWindow do
 
       @game_window.open_menu("mock2")
 
-      mock_screen2.should_receive(:update).once
-      @game_window.update
-
-      mock_screen1.should_receive(:draw).once
-      mock_screen2.should_receive(:draw).once
-      @game_window.draw
+      expect(:update, mock_screen2)
+      expect(:draw, mock_screen1, mock_screen2)
     end
 
     it "should not proxy draw for background screen after closing the menu" do
@@ -97,11 +90,8 @@ describe Nimo::GameWindow do
       @game_window.open_menu("mock2")
       @game_window.close_menu
 
-      mock_screen1.should_receive(:update).once
-      @game_window.update
-
-      mock_screen1.should_receive(:draw).once
-      @game_window.draw
+      expect(:update, mock_screen1)
+      expect(:draw, mock_screen1)
     end
     
     def new_mock_screen(name)
@@ -109,6 +99,35 @@ describe Nimo::GameWindow do
       mock_screen.should_receive(:notify).once
       @game_window.add_screen(name, mock_screen)
       return mock_screen
+    end
+    
+    def expect(method_name, *instances)
+      instances.each { |instance| instance.should_receive(method_name) }
+      @game_window.send(method_name)
+    end
+  end
+  
+  describe "(timer events)" do
+    it "should not execute timer action before it's time" do
+      was_called = false
+
+      @game_window.screen :some_screen
+      @game_window.timer_for(100) { was_called = true }
+      @game_window.update
+      
+      was_called.should be_false
+    end
+    
+    it "should execute timer action only once" do
+      number_of_executions = 0
+
+      @game_window.screen :some_screen
+      @game_window.timer_for(0.1) { number_of_executions += 1 }
+      sleep 1
+      @game_window.update
+      @game_window.update
+      
+      number_of_executions.should == 1
     end
   end
   

@@ -7,13 +7,13 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'nimo'
 
-TEN_SECONDS = 10*60*1000 # ???
+THREE_SECONDS = 3
 
 Nimo::Game("Eventy", 512, 480) do
+  fonts :main => { :type => "Helvetica", :size => 20 }
+
   screen :main do
-    text :with => { :text => "Will exit in a few seconds", :x => 10, :y => 200, :color => Gosu::white }
-    
-    listen_to(:on_enter) { timer_for(TEN_SECONDS) { exit } }
-    any_key { exit }
+    text :with => { :text => "Will exit in a three seconds", :font => :main, :x => 10, :y => 200, :color => Gosu::white }
+    listen_to(:on_enter) { @game_window.timer_for(THREE_SECONDS) { exit } } # FIXME: not use game_window
   end
 end

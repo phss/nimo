@@ -19,6 +19,7 @@ module Nimo
       
       @representations = []
       @events = {}
+			@timers = []
     end
     
     # Register a representation to be called as a method.
@@ -55,9 +56,7 @@ module Nimo
 		# Defines an <tt>action</tt> to be executed after some <tt>seconds</tt>.
     # 
     def timer_for(seconds, &action)
-      @timer_start = Time.now.to_f
-      @timer_seconds = seconds
-      @timer_action = action
+			@timers << Timer.new(Time.now.to_f, seconds, action)
     end
 
     # :section: Gosu::Window hooks
@@ -65,10 +64,7 @@ module Nimo
     # Updates all representations.
     # 
     def update
-      if @timer_action && (Time.now.to_f - @timer_start) > @timer_seconds
-        @timer_action.call
-        @timer_action = nil        
-      end
+			process_timers
 			process_inputs
       @representations.each { |representation| representation.update }
     end
@@ -78,7 +74,30 @@ module Nimo
     def draw
       @representations.each { |representation| representation.draw }
     end
+
+		private
+
+		def process_timers
+			@timers.find_all { |timer| timer.should_run? }.each do |timer|
+				timer.run
+				@timers.delete(timer)
+			end
+		end
   
   end
+
+	class Timer
+		def initialize(start_time, delay_in_seconds, action)
+			@start_time, @delay_in_seconds, @action = start_time, delay_in_seconds, action
+		end
+
+		def should_run?
+			(Time.now.to_f - @start_time) > @delay_in_seconds
+		end
+
+		def run
+			@action.call
+		end
+	end
   
 end

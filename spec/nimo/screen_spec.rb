@@ -52,8 +52,7 @@ describe Nimo::Screen do
     it "should not execute timer action before it's time" do
       was_called = false
 
-      screen = Nimo::Screen.new(:id, nil, nil)
-      screen.timer_for(100) { was_called = true }
+      screen = screen_with_timer(100) { was_called = true }
       screen.update
       
       was_called.should be_false
@@ -62,13 +61,32 @@ describe Nimo::Screen do
     it "should execute timer action only once" do
       number_of_executions = 0
 
-      screen = Nimo::Screen.new(:id, nil, nil)
-      screen.timer_for(0.1) { number_of_executions += 1 }
-      sleep 1
+      screen = screen_with_timer(0.1) { number_of_executions += 1 }
+      sleep 0.2
       5.times { screen.update }
       
       number_of_executions.should == 1
     end
+
+		it "should define and execute multiple timers" do
+			first_called = second_called = false
+
+			screen = screen_with_timer(0.1) { first_called = true }
+			screen.timer_for(0.1) { second_called = true }
+
+			sleep 0.2
+			screen.update
+
+			first_called.should be_true
+			second_called.should be_true
+		end
+
+		def screen_with_timer(delay, &action)
+			screen = Nimo::Screen.new(:id, nil, nil)
+      screen.timer_for(delay, &action)
+			return screen
+		end
+
   end
  
   describe "(forwarding screen transition methods to game window)" do

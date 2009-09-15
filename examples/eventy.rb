@@ -14,6 +14,6 @@ Nimo::Game("Eventy", 512, 480) do
 
   screen :main do
     text :with => { :text => "Will exit in a three seconds", :font => :main, :x => 10, :y => 200, :color => Gosu::white }
-    listen_to(:on_enter) { @game_window.timer_for(THREE_SECONDS) { exit } } # FIXME: not use game_window
+    listen_to(:on_enter) { timer_for(THREE_SECONDS) { exit } } 
   end
 end

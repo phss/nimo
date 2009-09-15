@@ -47,7 +47,30 @@ describe Nimo::Screen do
       @screen.draw
     end  
   end
-  
+
+  describe "(timer events)" do
+    it "should not execute timer action before it's time" do
+      was_called = false
+
+      screen = Nimo::Screen.new(:id, nil, nil)
+      screen.timer_for(100) { was_called = true }
+      screen.update
+      
+      was_called.should be_false
+    end
+    
+    it "should execute timer action only once" do
+      number_of_executions = 0
+
+      screen = Nimo::Screen.new(:id, nil, nil)
+      screen.timer_for(0.1) { number_of_executions += 1 }
+      sleep 1
+      5.times { screen.update }
+      
+      number_of_executions.should == 1
+    end
+  end
+ 
   describe "(forwarding screen transition methods to game window)" do
     [:go_to, :open_menu, :close_menu].each do |method_name|
       it "should forward #{method_name} method to game_window" do

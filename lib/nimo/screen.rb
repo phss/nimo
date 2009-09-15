@@ -51,11 +51,25 @@ module Nimo
       @representations << representation
       representation
     end
-    
+ 
+		# Defines an <tt>action</tt> to be executed after some <tt>seconds</tt>.
+    # 
+    def timer_for(seconds, &action)
+      @timer_start = Time.now.to_f
+      @timer_seconds = seconds
+      @timer_action = action
+    end
+
+    # :section: Gosu::Window hooks
+   
     # Updates all representations.
     # 
     def update
-      process_inputs
+      if @timer_action && (Time.now.to_f - @timer_start) > @timer_seconds
+        @timer_action.call
+        @timer_action = nil        
+      end
+			process_inputs
       @representations.each { |representation| representation.update }
     end
   

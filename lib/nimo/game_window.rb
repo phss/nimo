@@ -74,22 +74,10 @@ module Nimo
       @current_screen = @background_screens.pop
     end
     
-    # Defines an <tt>action</tt> to be executed after some <tt>seconds</tt>.
-    # 
-    def timer_for(seconds, &action)
-      @timer_start = Time.now.to_f
-      @timer_seconds = seconds
-      @timer_action = action
-    end
-
     # :section: Gosu::Window hooks
     
     def update
-      if @timer_action && (Time.now.to_f - @timer_start) > @timer_seconds
-        @timer_action.call
-        @timer_action = nil        
-      end
-      @current_screen.update
+     @current_screen.update
     end
 
     def draw

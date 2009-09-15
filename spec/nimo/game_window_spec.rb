@@ -3,36 +3,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Nimo::GameWindow do
   
   before(:each) do
-    @resources = mock("resources")
-    Nimo::Resources.should_receive(:new).and_return(@resources)
     @game_window = Nimo::GameWindow.new("Test", 640, 480)
-  end
-  
-  describe "(screen construction)" do
-    it "should add a new screen with the supplied screen building block" do
-      screen = mock("screen")
-      Nimo::Screen.should_receive(:new).and_return(screen)
-      screen.should_receive(:quad).with(:something)
-      screen.should_receive(:notify)
-      
-      @game_window.screen :name do
-        quad :something
-      end
-    end
-    
-    it "should forward image loading to the Resources" do
-      image_def = {:some_tag => { :filename => "some file name.png" }}
-      @resources.should_receive(:load_images).with(image_def)
-      
-      @game_window.images(image_def)
-    end
   end
   
   describe "(screen transition)" do 
     before(:each) do
-      @game_window.screen :first
-      @game_window.screen :second
-      @game_window.screen :third
+      @game_window.add_screen(:first, Nimo::Screen.new(:first, nil, nil))
+      @game_window.add_screen(:second, Nimo::Screen.new(:second, nil, nil))
+      @game_window.add_screen(:third, Nimo::Screen.new(:third, nil, nil))
     end
      
     it "should have the first screen added as the current screen" do

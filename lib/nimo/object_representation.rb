@@ -40,7 +40,7 @@ module Nimo
 
     def update
       @always_actions.each { |action| @game_object.instance_eval(&action) }
-      process_inputs
+      process_inputs(@game_window)
 			@observer.call(self, game_object) unless @observer.nil?
     end
 

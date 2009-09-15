@@ -4,6 +4,7 @@ module Nimo
   # It is an extension of Gosu::Window, thus implementing the update, draw and button_down hooks.
   # 
   # FIXME: not respecting the SRP. Breakup into smaller classes.
+  # FIXME: create a builder like replacement
   class GameWindow < Gosu::Window
     
     attr_reader :current_screen, :resources

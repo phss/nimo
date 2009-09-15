@@ -9,9 +9,7 @@ module Nimo
     # - <tt>:repeatable</tt> (defaults to true) - execute the action every update regardless if the key was already pressed in the previous update.
     # 
     def when_key(key, options = {}, &action)
-      key = @game_window.char_to_button_id(key) if key.class == String
       key_actions[key] = KeyAction.new(action, options)
-      self
     end
     
     # Register an action to be executed everytime a key is pressed.
@@ -23,12 +21,12 @@ module Nimo
     # Gosu hook invoked anytime a button is pressed
     # 
     def button_down(id) #:nodoc:
-       act_upon.instance_eval(&@any_key_action) unless @any_key_action.nil?
+       act_upon.instance_eval(&@any_key_action) if @any_key_action
     end
     
-    def process_inputs
+    def process_inputs(game_window)
       key_actions.each do |key, key_action|
-        act_upon.instance_eval(&key_action.action) if key_action.should_execute?(@game_window.button_down?(key))
+        act_upon.instance_eval(&key_action.action) if key_action.should_execute?(game_window.button_down?(key))
       end
     end
     

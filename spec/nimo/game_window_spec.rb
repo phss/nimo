@@ -107,28 +107,4 @@ describe Nimo::GameWindow do
     end
   end
   
-  describe "(timer events)" do
-    it "should not execute timer action before it's time" do
-      was_called = false
-
-      @game_window.screen :some_screen
-      @game_window.timer_for(100) { was_called = true }
-      @game_window.update
-      
-      was_called.should be_false
-    end
-    
-    it "should execute timer action only once" do
-      number_of_executions = 0
-
-      @game_window.screen :some_screen
-      @game_window.timer_for(0.1) { number_of_executions += 1 }
-      sleep 1
-      @game_window.update
-      @game_window.update
-      
-      number_of_executions.should == 1
-    end
-  end
-  
 end

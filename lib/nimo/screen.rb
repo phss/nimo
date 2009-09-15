@@ -65,7 +65,7 @@ module Nimo
     # 
     def update
 			process_timers
-			process_inputs
+			process_inputs(@game_window)
       @representations.each { |representation| representation.update }
     end
   
@@ -86,6 +86,7 @@ module Nimo
   
   end
 
+  # FIXME: review timer stuff.
 	class Timer
 		def initialize(start_time, delay_in_seconds, action)
 			@start_time, @delay_in_seconds, @action = start_time, delay_in_seconds, action

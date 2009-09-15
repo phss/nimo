@@ -28,7 +28,7 @@ require NIMO_DIR + "/behavior/deflector"
 require NIMO_DIR + "/behavior/projectile"
 require NIMO_DIR + "/behavior/moveable"
 
-require NIMO_DIR + "/object_representation"
+require NIMO_DIR + "/representations/object_representation"
 require NIMO_DIR + "/representations/quad_representation"
 require NIMO_DIR + "/representations/image_representation"
 require NIMO_DIR + "/representations/text_representation"

@@ -3,7 +3,8 @@ module Nimo
   class QuadRepresentation < ObjectRepresentation
     represent :quad
     attr_accessor :color
-      
+     
+	  # FIXME: add :color check	
     def load(resources, params)
       @color = params[:color]      
     end

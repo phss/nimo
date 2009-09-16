@@ -4,6 +4,7 @@ module Nimo
   # 
   class Resources
 
+		# FIXME: Change attribute accessors to throw errors for missing resources
     attr_reader :images, :fonts, :sounds
 
     def initialize(game_window)

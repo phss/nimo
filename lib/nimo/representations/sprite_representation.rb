@@ -12,6 +12,7 @@ module Nimo
       unflip
     end
 
+		# FIXME: raise exception for missing :image
     def load(resources, params)
       @sprite_tiles = resources.images[params[:image]]        
     end

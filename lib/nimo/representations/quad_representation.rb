@@ -4,8 +4,9 @@ module Nimo
     represent :quad
     attr_accessor :color
      
-	  # FIXME: add :color check	
     def load(resources, params)
+      raise "Must provide :color param for quad loading" unless params.has_key?(:color)
+      
       @color = params[:color]      
     end
   

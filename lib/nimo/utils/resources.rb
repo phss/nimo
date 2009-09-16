@@ -4,7 +4,6 @@ module Nimo
   # 
   class Resources
 
-		# FIXME: Change attribute accessors to throw errors for missing resources
     attr_reader :images, :fonts, :sounds
 
     def initialize(game_window)
@@ -25,6 +24,11 @@ module Nimo
     def load_sounds(sound_definitions)
       sound_definitions.each { |tag, definition| @sounds[tag] ||= Gosu::Song.new(@game_window, definition[:filename]) }
     end
+    
+    def method_missing(meth, *args, &blk)
+      super unless [:image, :sound, :font].include?(meth)
+      validate_and_return_resource(meth, args.shift)
+    end
 
     private
     
@@ -35,6 +39,12 @@ module Nimo
         return Gosu::Image.load_tiles(@game_window, definition[:filename], width, height, false)
       end
       return Gosu::Image.new(@game_window, definition[:filename], 0)
+    end
+    
+    def validate_and_return_resource(resource_type, tag)
+      resource_list = self.send("#{resource_type.to_s}s")
+      raise "No #{resource_type.to_s} resource named '#{tag}'" unless resource_list.has_key?(tag)
+      resource_list[tag]
     end
     
   end

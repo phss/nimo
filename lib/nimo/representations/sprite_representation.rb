@@ -12,9 +12,9 @@ module Nimo
       unflip
     end
 
-		# FIXME: raise exception for missing :image
     def load(resources, params)
-      @sprite_tiles = resources.images[params[:image]]        
+			raise "Must provide :image param for sprite loading" unless params.has_key?(:image)
+      @sprite_tiles = resources.image(params[:image])
     end
     
     def flip

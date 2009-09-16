@@ -7,7 +7,7 @@ describe Nimo::SpriteRepresentation do
     mock_resources = mock("resources")
     @tiles = [mock("sprite tile 1"), mock("sprite tile 2"), mock("sprite tile 3"), mock("sprite tile 4")]
     
-    mock_resources.should_receive(:images).and_return({:test_tiles => @tiles})
+    mock_resources.should_receive(:image).with(:test_tiles).and_return(@tiles)
     
 	  obj = Nimo::GameObject.new(:x => 0, :y => 0, :width => 20, :height => 20, :current_state => :state_one)
     @sprite = Nimo::SpriteRepresentation.new(@mock_window, obj).
@@ -64,5 +64,10 @@ describe Nimo::SpriteRepresentation do
     
     @sprite.change_to(:state_two)
     3.times { @sprite.draw; sleep 0.2 }
+  end
+  
+  it "should raise exception when trying to load sprite with missing :image param" do
+    empty_resources = mock("resources")
+    lambda { @sprite.load(empty_resources, {}) }.should raise_error("Must provide :image param for sprite loading")
   end
 end

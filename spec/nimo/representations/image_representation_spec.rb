@@ -9,7 +9,7 @@ describe Nimo::ImageRepresentation do
   end
   
   it "should load image from resources and draw it" do
-    expect_image_access(:some_file_tag => @image_file)
+    expect_image_access(:some_file_tag, @image_file)
     representation = load_representation(:image => :some_file_tag)
     
     @image_file.should_receive(:draw)
@@ -17,7 +17,7 @@ describe Nimo::ImageRepresentation do
   end
   
   it "should load image from tile resource and draw it" do
-    expect_image_access(:some_file_tag => [nil, @image_file, nil])
+    expect_image_access(:some_file_tag, [nil, @image_file, nil])
     representation = load_representation(:image => :some_file_tag, :index => 1)
     
     @image_file.should_receive(:draw)
@@ -34,8 +34,8 @@ describe Nimo::ImageRepresentation do
 		return representation
 	end
 
-	def expect_image_access(image_map)
-		@resources.stub!(:images).and_return(image_map)
+	def expect_image_access(tag, image)
+		@resources.should_receive(:image).with(tag).and_return(image)
 	end
   
 end

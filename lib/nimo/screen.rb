@@ -78,25 +78,24 @@ module Nimo
 		private
 
 		def process_timers
-			@timers.find_all { |timer| timer.should_run? }.each do |timer|
-				timer.run
+			@timers.find_all { |timer| timer.time_is_up? }.each do |timer|
+				timer.run_action
 				@timers.delete(timer)
 			end
 		end
   
   end
 
-  # FIXME: review timer stuff.
 	class Timer
 		def initialize(start_time, delay_in_seconds, action)
 			@start_time, @delay_in_seconds, @action = start_time, delay_in_seconds, action
 		end
 
-		def should_run?
+		def time_is_up?
 			(Time.now.to_f - @start_time) > @delay_in_seconds
 		end
 
-		def run
+		def run_action
 			@action.call
 		end
 	end

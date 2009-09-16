@@ -25,7 +25,7 @@ Nimo::Game("Soundy", WINDOW_WIDTH, WINDOW_HEIGHT) do
                    :text => "Press <esc> to quit or <enter> to go to the next screen."}
     
     when_key(Gosu::Button::KbEscape) { exit }
-    when_key(Gosu::Button::KbReturn) { sounds[:startup].stop and go_to :another }
+    when_key(Gosu::Button::KbReturn) { sounds[:startup].stop; go_to :another }
   end
   
   screen :another do
@@ -35,6 +35,6 @@ Nimo::Game("Soundy", WINDOW_WIDTH, WINDOW_HEIGHT) do
                    :text => "Press <esc> to go back or <enter> to play the sound."}
 
     when_key(Gosu::Button::KbEscape) { go_to :main }
-    when_key(Gosu::Button::KbReturn) { @resources.sounds[:effect].play }
+    when_key(Gosu::Button::KbReturn) { sounds[:effect].play }
   end
 end

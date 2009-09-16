@@ -36,7 +36,6 @@ module Nimo
         obj.y > (@y + @height) || @y > (obj.y + obj.height))
     end
     
-    # FIXME: move this, ant the previous method, to a different object/module.
     def intersection(obj)
       collide?(obj) ? Intersection.between(self, obj) : nil
     end

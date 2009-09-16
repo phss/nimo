@@ -61,4 +61,14 @@ describe Nimo::ObjectRepresentation do
       was_updated.should be_true
 		end
 	end
+	
+	describe "(exceptions for methods that should be overriden)" do
+	  it "should raise exception when load was not override" do
+	    lambda { Nimo::ObjectRepresentation.new(nil, nil).load(nil, nil) }.should raise_error("Load should be overriden by representation")
+	  end
+	  
+	  it "should raise exception when draw was not override" do
+	    lambda { Nimo::ObjectRepresentation.new(nil, nil).draw }.should raise_error("Draw should be overriden by representation")
+	  end
+	end
 end

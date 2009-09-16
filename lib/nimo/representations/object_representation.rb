@@ -13,8 +13,9 @@ module Nimo
       @always_actions = []
     end
 
-    # Hook to load data (i.e. images and fonts) from the game window. FIXME: not a great solution
+    # Hook to load data (i.e. images and fonts) from the game window.
     def load(resources, params)
+      raise "Load should be overriden by representation"
     end
 
     # Register and action that always execute on a game update.
@@ -44,8 +45,9 @@ module Nimo
 			@observer.call(self, game_object) unless @observer.nil?
     end
 
-    # Should be overriden by childs. FIXME: throw an exception?
+    # Should be overriden by childs.
     def draw
+      raise "Draw should be overriden by representation"
     end
 
     def act_upon

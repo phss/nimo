@@ -56,13 +56,6 @@ describe Nimo::GameObject do
   
   describe "(collisions and intersections)" do
     
-    def assert_intersection(obj, x, y, width, height)
-      obj.x.should == x
-      obj.y.should == y
-      obj.width.should == width
-      obj.height.should == height
-    end
-    
     it "should not collide when not intersecting an object" do
       temp_obj1 = Nimo::GameObject.new(:x => 10, :y => 10, :width => 20, :height => 20)
       temp_obj2 = Nimo::GameObject.new(:x => 100, :y => 100, :width => 20, :height => 20)
@@ -130,6 +123,12 @@ describe Nimo::GameObject do
       assert_intersection(temp_obj2.intersection(temp_obj1), 10, 10, 20, 20)
     end 
     
+    def assert_intersection(obj, x, y, width, height)
+      obj.x.should == x
+      obj.y.should == y
+      obj.width.should == width
+      obj.height.should == height
+    end
   end
   
   describe "(event notification)" do

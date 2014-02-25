@@ -1,3 +1,5 @@
+:warning: Not really active or maintained. But still has some fun bits of code. :warning:
+
 # Nimo: Yet another Ruby game library/framework/thingie
 
 Nimo is yet another Ruby game thing. It is based on Gosu (http://www.libgosu.org). I can't claim this is the best way of doing a game library, but at least it is my try. I had a lot of fun implementing this and hopefully will use it in a few fun games.
